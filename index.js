@@ -20,12 +20,15 @@ function runCommand(command, cwd = process.cwd()) {
 async function gitSync() {
     try {
         console.log('Sync with github...');
-        await runCommand('git stash');
         await runCommand('git pull');
-        await runCommand('git stash pop');
         console.log('✅');
     } catch (error) {
-        console.error('❌ Sync error:', error.message);
+        try{
+          await runCommand('git fetch origin');
+          await runCommand('git reset --hard origin/main');
+        } catch (error) {
+          console.error('❌ Sync error:', error.message);
+        } 
     }
 };
 
