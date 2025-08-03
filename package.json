@@ -1,0 +1,21 @@
+{
+  "name": "ayi",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "yurba.js",
+    "bot"
+  ],
+  "author": "RastGame",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "dotenv": "^17.2.0",
+    "yurba.js": "^0.1.10"
+  }
+}
