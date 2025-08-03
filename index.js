@@ -18,4 +18,8 @@ client.registerCommand('info', {}, (message) => {
   message.reply(`Інформація про мене: \n- Ім'я: ${client.user.Name}\n- Розробник: @${author}\n- Версія: ${version}`)
 })
 
+client.registerCommand('help', {}, (message) => {
+  message.reply(`Commands: ${client.getCommands()}`)
+})
+
 client.init();
