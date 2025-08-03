@@ -1,5 +1,5 @@
 import { Client } from 'yurba.js';
-const dotenv = require('dotenv');
+import dotenv from 'dotenv';
 dotenv.config();
 
 const client = new Client(process.env.TOKEN);
