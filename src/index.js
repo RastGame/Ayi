@@ -1,5 +1,5 @@
 import { Client } from 'yurba.js';
-import pkg from './package.json' with { type: "json" };
+import pkg from '../package.json' with { type: "json" };
 const { version, author } = pkg;
 import dotenv from 'dotenv';
 dotenv.config();
