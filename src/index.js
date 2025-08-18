@@ -37,6 +37,31 @@ client.registerCommand('help', {}, (message) => {
   message.reply(`Commands: ${client.getCommands()}`)
 })
 
+client.registerCommand('sync', {}, (message) => {
+  if (message.Author.ID !== 1111) {
+    message.reply('❌ Access denied');
+    return;
+  }
+  
+  message.reply('🔄 Syncing with GitHub...');
+  process.send({ type: 'sync', userId: message.Author.ID });
+  
+  const timeout = setTimeout(() => {
+    message.reply('⏰ Sync timeout');
+  }, 30000);
+  
+  process.once('message', (msg) => {
+    if (msg.type === 'syncResult') {
+      clearTimeout(timeout);
+      if (msg.hasUpdates) {
+        message.reply('✅ Updates found! Restarting...');
+      } else {
+        message.reply('✅ No updates found');
+      }
+    }
+  });
+})
+
 
 client.init();
 

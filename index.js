@@ -20,23 +20,50 @@ function runCommand(command, cwd = process.cwd()) {
 async function gitSync() {
     try {
         console.log('Sync with github...');
-        await runCommand('git pull');
+        const result = await runCommand('git pull');
         console.log('✅');
+        return !result.includes('Already up to date');
     } catch (error) {
         try{
           await runCommand('git fetch origin');
           await runCommand('git reset --hard origin/main');
+          return true;
         } catch (error) {
           console.error('❌ Sync error:', error.message);
+          return false;
         } 
     }
 };
+
+let updateCheckTimeout;
+let currentInterval = 0;
+const intervals = [1, 5, 15, 30];
+
+function scheduleUpdateCheck() {
+  const minutes = intervals[currentInterval] || 30;
+  console.log(`⏰ Next update check in ${minutes} minutes`);
+  
+  updateCheckTimeout = setTimeout(async () => {
+    console.log('🔍 Checking for updates...');
+    const hasUpdates = await gitSync();
+    
+    if (hasUpdates) {
+      console.log('🔄 Updates found! Restarting...');
+      currentInterval = 0;
+      process.exit(1);
+    } else {
+      if (currentInterval < intervals.length - 1) currentInterval++;
+      scheduleUpdateCheck();
+    }
+  }, minutes * 60 * 1000);
+}
 
 
 // Main startup function
 async function startBot() {
   try {
     await gitSync();
+    scheduleUpdateCheck();
 
     console.log('🤖 Start bot...');
     const botProcess = spawn('node', ['src/index.js'], {
@@ -61,12 +88,14 @@ async function startBot() {
     // Handle termination signals
     process.on('SIGINT', () => {
       console.log('\n🛑 Received termination signal...');
+      clearTimeout(updateCheckTimeout);
       botProcess.kill('SIGTERM');
       process.exit(0);
     });
 
     process.on('SIGTERM', () => {
       console.log('\n🛑 Received termination signal...');
+      clearTimeout(updateCheckTimeout);
       botProcess.kill('SIGTERM');
       process.exit(0);
     });
