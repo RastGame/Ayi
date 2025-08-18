@@ -17,6 +17,10 @@ client.registerCommand('hello', {}, (message) => {
   message.reply(`Hello! @${message.Author.Link}`)
 })
 
+client.registerCommand('hello1', {}, (message) => {
+  message.reply(`Hello! @${message.Author.Link}`)
+})
+
 client.registerCommand('info', {}, (message) => {
   message.reply(`Інформація про мене: \n- Ім'я: ${client.user.Name}\n- Розробник: @${author}\n- Версія: ${version}`)
 })
