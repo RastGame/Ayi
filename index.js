@@ -67,8 +67,25 @@ async function startBot() {
 
     console.log('🤖 Start bot...');
     const botProcess = spawn('node', ['src/index.js'], {
-      stdio: 'inherit',
+      stdio: ['inherit', 'inherit', 'inherit', 'ipc'],
       env: process.env
+    });
+
+    botProcess.on('message', async (msg) => {
+      if (msg.type === 'sync' && msg.userId === 1111) {
+        console.log('🔄 Manual sync requested by admin...');
+        const hasUpdates = await gitSync();
+        botProcess.send({ type: 'syncResult', hasUpdates, messageId: msg.messageId });
+        if (hasUpdates) {
+          console.log('🔄 Updates found! Restarting...');
+          currentInterval = 0;
+          setTimeout(() => process.exit(1), 1000);
+        }
+      }
+      if (msg.type === 'restart' && msg.userId === 1111) {
+        console.log('🔄 Manual restart requested by admin...');
+        process.exit(1);
+      }
     });
     
     botProcess.on('close', (code) => {

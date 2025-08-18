@@ -17,12 +17,8 @@ client.registerCommand('hello', {}, (message) => {
   message.reply(`Hello! @${message.Author.Link}`)
 })
 
-client.registerCommand('hello1', {}, (message) => {
-  message.reply(`Hello! @${message.Author.Link}`)
-})
-
 client.registerCommand('info', {}, (message) => {
-  message.reply(`Інформація про мене: \n- Ім'я: ${client.user.Name}\n- Розробник: @${author}\n- Версія: ${version}`)
+  message.reply(`**Інформація про мене**: \n- Ім'я: ${client.user.Name}\n- Розробник: @${author}\n- Версія: ${version}`)
 })
 
 client.registerCommand('test', { 'name': 'int' }, (message, args) => {
@@ -48,22 +44,31 @@ client.registerCommand('sync', {}, (message) => {
   }
   
   message.reply('🔄 Syncing with GitHub...');
-  process.send({ type: 'sync', userId: message.Author.ID });
+  process.send({ type: 'sync', userId: message.Author.ID, messageId: message.ID });
   
   const timeout = setTimeout(() => {
     message.reply('⏰ Sync timeout');
   }, 30000);
   
-  process.once('message', (msg) => {
-    if (msg.type === 'syncResult') {
+  const handler = (msg) => {
+    if (msg.type === 'syncResult' && msg.messageId === message.ID) {
       clearTimeout(timeout);
-      if (msg.hasUpdates) {
-        message.reply('✅ Updates found! Restarting...');
-      } else {
-        message.reply('✅ No updates found');
-      }
+      process.removeListener('message', handler);
+      message.reply(msg.hasUpdates ? '✅ Updates found! Restarting...' : '✅ No updates found');
     }
-  });
+  };
+  
+  process.on('message', handler);
+})
+
+client.registerCommand('restart', {}, (message) => {
+  if (message.Author.ID !== 1111) {
+    message.reply('❌ Access denied');
+    return;
+  }
+  
+  message.reply('🔄 Restarting bot...');
+  process.send({ type: 'restart', userId: message.Author.ID });
 })
 
 
