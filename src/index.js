@@ -42,7 +42,7 @@ client.registerCommand('info', {}, (message) => {
   const memUsage = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
 
   message.reply(
-    "" +
+    "`" +
     `┌──  Ayi v${version}
 │   • Dev: @${author}
 │   • Commands: ${client.getCommands().length}
@@ -52,7 +52,7 @@ client.registerCommand('info', {}, (message) => {
 │   • Memory:   ${memUsage} MB
 │   • Node.js:  ${process.version}
 └──────────────────────` +
-    ""
+    "`"
   );
 });
 
