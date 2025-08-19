@@ -40,19 +40,22 @@ client.registerCommand('info', {}, (message) => {
   const minutes = Math.floor((uptime % 3600) / 60);
   const seconds = Math.floor(uptime % 60);
   const memUsage = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
-  
-  message.reply(`**Інформація про мене:**
-- Ім'я: ${client.user.Name}
-- Розробник: @${author}
-- Версія: ${version}
 
-**Статистика:**
-- Час роботи: ${hours}г ${minutes}хв ${seconds}с
-- Використання пам'яті: ${memUsage} MB
-- Node.js: ${process.version}
-- Команд: ${client.getCommands().length}
-  `);
-})
+  message.reply(
+    "```" +
+    `┌──  Ayi v${version}
+│   • Dev: @${author}
+│   • Commands: ${client.getCommands().length}
+│
+├─ Статистика:
+│   • Uptime:   ${hours}г ${minutes}хв ${seconds}с
+│   • Memory:   ${memUsage} MB
+│   • Node.js:  ${process.version}
+└──────────────────────` +
+    "```"
+  );
+});
+
 
 
 client.registerCommand('test', { 'name': 'int' }, (message, args) => {
