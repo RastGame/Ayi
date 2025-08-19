@@ -80,7 +80,9 @@ async function startBot() {
     botProcess.on('message', async (msg) => {
       if (msg.type === 'sync' && msg.userId === 1111) {
         console.log('🔄 Manual sync requested by admin...');
+        console.log('DEBUG: Starting gitSync for manual request');
         const hasUpdates = await gitSync();
+        console.log(`DEBUG: Manual sync result: ${hasUpdates}`);
         botProcess.send({ type: 'syncResult', hasUpdates, messageId: msg.messageId });
         if (hasUpdates) {
           console.log('🔄 Updates found! Restarting...');
@@ -91,8 +93,13 @@ async function startBot() {
       }
       if (msg.type === 'restart' && msg.userId === 1111) {
         console.log('🔄 Manual restart requested by admin...');
+        console.log('DEBUG: Processing restart request');
         clearTimeout(updateCheckTimeout);
-        setTimeout(() => process.exit(1), 2000);
+        console.log('DEBUG: Exiting in 2 seconds');
+        setTimeout(() => {
+          console.log('DEBUG: Executing process.exit(1)');
+          process.exit(1);
+        }, 2000);
       }
     });
     
