@@ -22,19 +22,11 @@ async function gitSync() {
         console.log('Sync with github...');
         try { await runCommand('rm -f .git/index.lock'); } catch {}
         
-        const beforeCommit = await runCommand('git rev-parse HEAD');
-        console.log(`Before: ${beforeCommit.trim()}`);
-        
-        await runCommand('git pull');
-        
-        const afterCommit = await runCommand('git rev-parse HEAD');
-        console.log(`After: ${afterCommit.trim()}`);
-        
-        const hasUpdates = beforeCommit.trim() !== afterCommit.trim();
-        console.log(`Has updates: ${hasUpdates}`);
+        const pullResult = await runCommand('git pull');
         console.log('✅');
         
-        return hasUpdates;
+        // Перевіряємо чи були оновлення
+        return pullResult.includes('files changed') || pullResult.includes('insertions') || pullResult.includes('deletions');
     } catch (error) {
         console.error('❌ Sync error:', error.message);
         return false;
