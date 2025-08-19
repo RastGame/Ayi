@@ -64,9 +64,6 @@ client.registerCommand('sync', {}, (message) => {
         message.reply(`❌ Sync error: ${msg.error}`);
       } else {
         message.reply(msg.hasUpdates ? '✅ Updates found! Restarting...' : '✅ No updates found');
-        if (msg.hasUpdates) {
-          setTimeout(() => process.send({ type: 'readyToRestart' }), 1000);
-        }
       }
     }
   };
@@ -81,7 +78,7 @@ client.registerCommand('restart', {}, (message) => {
   }
   
   message.reply('🔄 Restarting bot...');
-  setTimeout(() => process.send({ type: 'restart', userId: message.Author.ID }), 1000);
+  process.send({ type: 'restart', userId: message.Author.ID });
 })
 
 

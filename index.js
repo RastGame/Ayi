@@ -22,11 +22,19 @@ async function gitSync() {
         console.log('Sync with github...');
         try { await runCommand('rm -f .git/index.lock'); } catch {}
         
-        const pullResult = await runCommand('git pull');
+        const beforeCommit = await runCommand('git rev-parse HEAD');
+        console.log(`Before: ${beforeCommit.trim()}`);
+        
+        await runCommand('git pull');
+        
+        const afterCommit = await runCommand('git rev-parse HEAD');
+        console.log(`After: ${afterCommit.trim()}`);
+        
+        const hasUpdates = beforeCommit.trim() !== afterCommit.trim();
+        console.log(`Has updates: ${hasUpdates}`);
         console.log('✅');
         
-        // Перевіряємо чи були оновлення
-        return pullResult.includes('files changed') || pullResult.includes('insertions') || pullResult.includes('deletions');
+        return hasUpdates;
     } catch (error) {
         console.error('❌ Sync error:', error.message);
         return false;
@@ -78,16 +86,13 @@ async function startBot() {
           console.log('🔄 Updates found! Restarting...');
           currentInterval = 0;
           clearTimeout(updateCheckTimeout);
+          setTimeout(() => process.exit(1), 3000);
         }
       }
       if (msg.type === 'restart' && msg.userId === 1111) {
         console.log('🔄 Manual restart requested by admin...');
         clearTimeout(updateCheckTimeout);
-        process.exit(1);
-      }
-      if (msg.type === 'readyToRestart') {
-        console.log('🔄 Bot ready to restart...');
-        process.exit(1);
+        setTimeout(() => process.exit(1), 2000);
       }
     });
     
