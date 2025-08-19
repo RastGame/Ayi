@@ -26,6 +26,7 @@ function adminOnly(handler) {
 }
 
 client.on('ready', () => {
+  client.sendMessage(459, 'Бот онлайн')
   console.log(`Бот запущено: ${client.user.Name}`);
 });
 
