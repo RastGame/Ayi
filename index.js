@@ -78,13 +78,16 @@ async function startBot() {
           console.log('🔄 Updates found! Restarting...');
           currentInterval = 0;
           clearTimeout(updateCheckTimeout);
-          setTimeout(() => process.exit(1), 2000);
         }
       }
       if (msg.type === 'restart' && msg.userId === 1111) {
         console.log('🔄 Manual restart requested by admin...');
         clearTimeout(updateCheckTimeout);
-        setTimeout(() => process.exit(1), 1000);
+        process.exit(1);
+      }
+      if (msg.type === 'readyToRestart') {
+        console.log('🔄 Bot ready to restart...');
+        process.exit(1);
       }
     });
     
