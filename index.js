@@ -144,6 +144,7 @@ function scheduleUpdateCheck() {
 async function startBot() {
   try {
     await gitSync();
+    try { await runCommand('npm install'); } catch {}
     botProcess = spawnBotProcess(); // Start the bot process
     scheduleUpdateCheck(); // Schedule the first update check
 
