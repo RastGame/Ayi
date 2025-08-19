@@ -50,7 +50,8 @@ client.registerCommand('info', {}, (message) => {
 - Час роботи: ${hours}г ${minutes}хв ${seconds}с
 - Використання пам'яті: ${memUsage} MB
 - Node.js: ${process.version}
-- Команд: ${Object.keys(client.commands || {}).length}`)
+- Команд: ${client.getCommands().length}
+- Сервери: ${client.guilds.length}`)
 })
 
 
