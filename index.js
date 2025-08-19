@@ -43,7 +43,7 @@ async function gitSync() {
 
 let updateCheckTimeout;
 let currentInterval = 0;
-const intervals = [1, 5, 15, 30];
+const intervals = [1]; // Check for updates every 1 minute
 let botProcess = null; // Variable to hold the bot process
 
 // Function to spawn the bot process
