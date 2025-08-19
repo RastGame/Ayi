@@ -99,10 +99,8 @@ async function startBot() {
     botProcess.on('close', (code) => {
       console.log(`\n❌ Bot terminated with code: ${code}`);
       clearTimeout(updateCheckTimeout);
-      if (code !== 0) {
-        console.log('🔄 Restarting in 5 seconds...');
-        setTimeout(startBot, 5000);
-      }
+      console.log('🔄 Restarting in 5 seconds...');
+      setTimeout(startBot, 5000);
     });
 
     // Error handling
