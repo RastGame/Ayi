@@ -20,11 +20,14 @@ function runCommand(command, cwd = process.cwd()) {
 async function gitSync() {
     try {
         console.log('Sync with github...');
+        try { await runCommand('rm -f .git/index.lock'); } catch {}
+        
         const result = await runCommand('git pull');
         console.log('✅');
         return !result.includes('Already up to date');
     } catch (error) {
         try{
+          await runCommand('rm -f .git/index.lock');
           await runCommand('git fetch origin');
           await runCommand('git reset --hard origin/main');
           return true;
@@ -74,22 +77,31 @@ async function startBot() {
     botProcess.on('message', async (msg) => {
       if (msg.type === 'sync' && msg.userId === 1111) {
         console.log('🔄 Manual sync requested by admin...');
-        const hasUpdates = await gitSync();
-        botProcess.send({ type: 'syncResult', hasUpdates, messageId: msg.messageId });
-        if (hasUpdates) {
-          console.log('🔄 Updates found! Restarting...');
-          currentInterval = 0;
-          setTimeout(() => process.exit(1), 1000);
+        try {
+          const hasUpdates = await gitSync();
+          botProcess.send({ type: 'syncResult', hasUpdates, messageId: msg.messageId });
+          if (hasUpdates) {
+            console.log('🔄 Updates found! Restarting...');
+            currentInterval = 0;
+            clearTimeout(updateCheckTimeout);
+            botProcess.kill('SIGTERM');
+            setTimeout(() => process.exit(1), 1000);
+          }
+        } catch (error) {
+          botProcess.send({ type: 'syncResult', hasUpdates: false, error: error.message, messageId: msg.messageId });
         }
       }
       if (msg.type === 'restart' && msg.userId === 1111) {
         console.log('🔄 Manual restart requested by admin...');
-        process.exit(1);
+        clearTimeout(updateCheckTimeout);
+        botProcess.kill('SIGTERM');
+        setTimeout(() => process.exit(1), 500);
       }
     });
     
     botProcess.on('close', (code) => {
       console.log(`\n❌ Bot terminated with code: ${code}`);
+      clearTimeout(updateCheckTimeout);
       if (code !== 0) {
         console.log('🔄 Restarting in 5 seconds...');
         setTimeout(startBot, 5000);

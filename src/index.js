@@ -54,7 +54,11 @@ client.registerCommand('sync', {}, (message) => {
     if (msg.type === 'syncResult' && msg.messageId === message.ID) {
       clearTimeout(timeout);
       process.removeListener('message', handler);
-      message.reply(msg.hasUpdates ? '✅ Updates found! Restarting...' : '✅ No updates found');
+      if (msg.error) {
+        message.reply(`❌ Sync error: ${msg.error}`);
+      } else {
+        message.reply(msg.hasUpdates ? '✅ Updates found! Restarting...' : '✅ No updates found');
+      }
     }
   };
   
