@@ -51,7 +51,7 @@ client.registerCommand('info', {}, (message) => {
 - Використання пам'яті: ${memUsage} MB
 - Node.js: ${process.version}
 - Команд: ${client.getCommands().length}
-- Сервери: ${client.guilds.length}`)
+  `);
 })
 
 
