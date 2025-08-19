@@ -21,9 +21,41 @@ const TOKEN = process.env.TOKEN
 
 const client = new Client(TOKEN, { prefix: ''});
 
+// Cooldown storage
+const cooldowns = new Map();
+
 // Helper function to check if user is admin
 function isAdmin(message) {
   return message.Author.ID === 1111;
+}
+
+// Cooldown decorator
+function withCooldown(handler, cooldownTime = 5000, maxUses = 3) {
+  return (message, args) => {
+    const userId = message.Author.ID;
+    const now = Date.now();
+    const key = `${handler.name}_${userId}`;
+    
+    if (!cooldowns.has(key)) {
+      cooldowns.set(key, { uses: 0, resetTime: now + cooldownTime });
+    }
+    
+    const userCooldown = cooldowns.get(key);
+    
+    if (now > userCooldown.resetTime) {
+      userCooldown.uses = 0;
+      userCooldown.resetTime = now + cooldownTime;
+    }
+    
+    if (userCooldown.uses >= maxUses) {
+      const timeLeft = Math.ceil((userCooldown.resetTime - now) / 1000);
+      message.reply(`⏰ Зачекайте ${timeLeft} секунд`);
+      return;
+    }
+    
+    userCooldown.uses++;
+    return handler(message, args);
+  };
 }
 
 // Decorator for admin-only commands
@@ -71,11 +103,11 @@ client.on('join', (message) => {
 })
 
 
-client.registerCommand('hello', {}, (message) => {
+client.registerCommand('hello', {}, withCooldown(function hello(message) {
   message.reply(`Hello! @${message.Author.Link}`)
-})
+}));
 
-client.registerCommand('info', {}, (message) => {
+client.registerCommand('info', {}, withCooldown(function info(message) {
   const uptime = process.uptime();
   const hours = Math.floor(uptime / 3600);
   const minutes = Math.floor((uptime % 3600) / 60);
@@ -95,7 +127,7 @@ client.registerCommand('info', {}, (message) => {
 └──────────────────────` +
     "```"
   );
-});
+}));
 
 
 
@@ -104,7 +136,7 @@ import fs from 'fs/promises';
 import path from 'path';
 
 
-client.registerCommand('testcard', {}, async (message) => {
+client.registerCommand('testcard', {}, withCooldown(async function testcard(message) {
   try {
     const avatar = await client.getPhoto(message.Author.Avatar)
 
@@ -139,14 +171,19 @@ client.registerCommand('testcard', {}, async (message) => {
     const photo = await response.json();
     console.log('Photo uploaded:', photo);
     
+    // Очищення кешу після відправки
+    const userId = message.Author.ID;
+    const key = `testcard_${userId}`;
+    cooldowns.delete(key);
+    
     await message.reply(``, [photo.ID]);
   } catch (error) {
     console.error('Error in testcard command:', error);
     message.reply('❌ An error occurred while generating the card.');
   }
-});
+}, 5000, 1));
 
-client.registerCommand('testfont', {}, async (message) => {
+client.registerCommand('testfont', {}, withCooldown(async function testfont(message) {
   try {
     // Створення тестової карточки
     const card = new GreetingsCard()
@@ -185,11 +222,11 @@ client.registerCommand('testfont', {}, async (message) => {
     console.error('Error in testfont command:', error);
     message.reply('❌ Помилка при тестуванні шрифту.');
   }
-});
+}));
 
-client.registerCommand('testcmd', { 'name': 'int' }, (message, args) => {
+client.registerCommand('testcmd', { 'name': 'int' }, withCooldown(function testcmd(message, args) {
   message.reply(`test: ${args.name}`)
-})
+}));
 
 client.on('join', ( message ) => {
     console.log('join', message)
