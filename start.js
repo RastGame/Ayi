@@ -53,6 +53,8 @@ let botProcess = null; // Variable to hold the bot process
 // Function to spawn the bot process
 function spawnBotProcess() {
   console.log('🤖 Start bot...');
+  runCommand('npm install')
+
   const newBotProcess = spawn('node', ['src/index.js'], {
     stdio: ['inherit', 'inherit', 'inherit', 'ipc'],
     env: process.env
