@@ -22,9 +22,13 @@ async function gitSync() {
         console.log('Sync with github...');
         try { await runCommand('rm -f .git/index.lock'); } catch {}
         
-        const result = await runCommand('git pull');
+        // Перевіряємо поточний коміт
+        const beforeCommit = await runCommand('git rev-parse HEAD');
+        await runCommand('git pull');
+        const afterCommit = await runCommand('git rev-parse HEAD');
+        
         console.log('✅');
-        return !result.includes('Already up to date');
+        return beforeCommit.trim() !== afterCommit.trim();
     } catch (error) {
         console.error('❌ Sync error:', error.message);
         return false;
