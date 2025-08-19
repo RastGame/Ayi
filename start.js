@@ -51,9 +51,14 @@ const intervals = [1]; // Check for updates every 1 minute
 let botProcess = null; // Variable to hold the bot process
 
 // Function to spawn the bot process
-function spawnBotProcess() {
+async function spawnBotProcess() {
   console.log('🤖 Start bot...');
-  runCommand('npm install')
+  try {
+    await runCommand('npm install');
+    console.log('📦 Dependencies installed');
+  } catch (error) {
+    console.log('⚠️ npm install failed:', error.message);
+  }
 
   const newBotProcess = spawn('node', ['src/index.js'], {
     stdio: ['inherit', 'inherit', 'inherit', 'ipc'],
@@ -75,7 +80,7 @@ function spawnBotProcess() {
         if (botProcess) {
             botProcess.kill();
         }
-        botProcess = spawnBotProcess();
+        botProcess = await spawnBotProcess();
         scheduleUpdateCheck(); // Reschedule the update check
       }
     }
@@ -88,7 +93,7 @@ function spawnBotProcess() {
       if (botProcess) {
           botProcess.kill();
       }
-      botProcess = spawnBotProcess();
+      botProcess = await spawnBotProcess();
       scheduleUpdateCheck(); // Reschedule the update check
     }
   });
@@ -99,8 +104,8 @@ function spawnBotProcess() {
     // Only restart if the process was not killed intentionally
     if (code !== 0 && code !== null) {
         console.log('🔄 Restarting in 5 seconds...');
-        setTimeout(() => {
-            botProcess = spawnBotProcess();
+        setTimeout(async () => {
+            botProcess = await spawnBotProcess();
             scheduleUpdateCheck(); // Reschedule the update check
         }, 5000);
     }
