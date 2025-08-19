@@ -21,6 +21,12 @@ client.registerCommand('info', {}, (message) => {
   message.reply(`Інформація про мене: \n- Ім'я: ${client.user.Name}\n- Розробник: @${author}\n- Версія: ${version}`)
 })
 
+
+client.registerCommand('infotest', {}, (message) => {
+  message.reply(`Інформація про мене: \n- Ім'я: ${client.user.Name}\n- Розробник: @${author}\n- Версія: ${version}`)
+})
+
+
 client.registerCommand('test', { 'name': 'int' }, (message, args) => {
   message.reply(`test: ${args.name}`)
 })
