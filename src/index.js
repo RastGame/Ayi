@@ -42,7 +42,7 @@ client.registerCommand('info', {}, (message) => {
   const memUsage = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
 
   message.reply(
-    "`" +
+    "```" +
     `┌──  Ayi v${version}
 │   • Dev: @${author}
 │   • Commands: ${client.getCommands().length}
@@ -52,9 +52,35 @@ client.registerCommand('info', {}, (message) => {
 │   • Memory:   ${memUsage} MB
 │   • Node.js:  ${process.version}
 └──────────────────────` +
-    "`"
+    "```"
   );
 });
+
+
+
+import { Font } from "canvacord";
+import { GreetingsCard } from "./GreetingsCard.js";
+
+
+registerCommand('testcard', {}, (message) => {
+  Font.loadDefault();
+
+  // create card
+  const card = new GreetingsCard()
+    .setAvatar("https://cdn.discordapp.com/embed/avatars/0.png")
+    .setDisplayName("Wumpus")
+    .setType("welcome")
+    .setMessage("Welcome to the server!");
+
+  const image = card.build({ format: "png" });
+
+  const photo = client.api.media.addPhoto(image, 'test')
+
+  message.reply(`test`, null, photo.ID)
+})
+// load font, in this case we are loading the bundled font from canvacord
+
+// now do something with the image buffer
 
 
 
