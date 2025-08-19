@@ -3,7 +3,10 @@
 import { spawn, exec } from 'child_process';
 import fs from 'fs';
 import path from 'path';
-import 'dotenv/config';
+
+import dotenv from 'dotenv';
+dotenv.config();
+
 
 // Function to execute commands
 function runCommand(command, cwd = process.cwd()) {
