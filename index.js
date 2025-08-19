@@ -26,15 +26,8 @@ async function gitSync() {
         console.log('✅');
         return !result.includes('Already up to date');
     } catch (error) {
-        try{
-          await runCommand('rm -f .git/index.lock');
-          await runCommand('git fetch origin');
-          await runCommand('git reset --hard origin/main');
-          return true;
-        } catch (error) {
-          console.error('❌ Sync error:', error.message);
-          return false;
-        } 
+        console.error('❌ Sync error:', error.message);
+        return false;
     }
 };
 
@@ -77,18 +70,14 @@ async function startBot() {
     botProcess.on('message', async (msg) => {
       if (msg.type === 'sync' && msg.userId === 1111) {
         console.log('🔄 Manual sync requested by admin...');
-        try {
-          const hasUpdates = await gitSync();
-          botProcess.send({ type: 'syncResult', hasUpdates, messageId: msg.messageId });
-          if (hasUpdates) {
-            console.log('🔄 Updates found! Restarting...');
-            currentInterval = 0;
-            clearTimeout(updateCheckTimeout);
-            botProcess.kill('SIGTERM');
-            setTimeout(() => process.exit(1), 1000);
-          }
-        } catch (error) {
-          botProcess.send({ type: 'syncResult', hasUpdates: false, error: error.message, messageId: msg.messageId });
+        const hasUpdates = await gitSync();
+        botProcess.send({ type: 'syncResult', hasUpdates, messageId: msg.messageId });
+        if (hasUpdates) {
+          console.log('🔄 Updates found! Restarting...');
+          currentInterval = 0;
+          clearTimeout(updateCheckTimeout);
+          botProcess.kill('SIGTERM');
+          setTimeout(() => process.exit(1), 1000);
         }
       }
       if (msg.type === 'restart' && msg.userId === 1111) {
