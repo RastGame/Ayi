@@ -9,6 +9,22 @@ const { version, author } = pkg;
 
 const client = new Client(process.env.TOKEN, { prefix: ''});
 
+// Helper function to check if user is admin
+function isAdmin(message) {
+  return message.Author.ID === 1111;
+}
+
+// Decorator for admin-only commands
+function adminOnly(handler) {
+  return (message, args) => {
+    if (!isAdmin(message)) {
+      message.reply('❌ У вас не достатньо прав');
+      return;
+    }
+    return handler(message, args);
+  };
+}
+
 client.on('ready', () => {
   console.log(`Бот запущено: ${client.user.Name}`);
 });
@@ -18,13 +34,23 @@ client.registerCommand('hello', {}, (message) => {
 })
 
 client.registerCommand('info', {}, (message) => {
-  message.reply(`Інформація про мене: \n- Ім'я: ${client.user.Name}\n- Розробник: @${author}\n- Версія: ${version}`)
-})
+  const uptime = process.uptime();
+  const hours = Math.floor(uptime / 3600);
+  const minutes = Math.floor((uptime % 3600) / 60);
+  const seconds = Math.floor(uptime % 60);
+  const memUsage = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
+  
+  message.reply(`**Інформація про мене:**
+- Ім'я: ${client.user.Name}
+- Розробник: @${author}
+- Версія: ${version}
 
-client.registerCommand('test5', {}, (message) => {
-  message.reply(`Інформація про мене: \n- Ім'я: ${client.user.Name}\n- Розробник: @${author}\n- Версія: ${version}`)
+**Статистика:**
+- Час роботи: ${hours}г ${minutes}хв ${seconds}с
+- Використання пам'яті: ${memUsage} MB
+- Node.js: ${process.version}
+- Команд: ${Object.keys(client.commands || {}).length}`)
 })
-
 
 
 client.registerCommand('test', { 'name': 'int' }, (message, args) => {
@@ -43,12 +69,7 @@ client.registerCommand('help', {}, (message) => {
   message.reply(`Commands: ${client.getCommands()}`)
 })
 
-client.registerCommand('sync', {}, (message) => {
-  if (message.Author.ID !== 1111) {
-    message.reply('❌ Access denied');
-    return;
-  }
-  
+client.registerCommand('sync', {}, adminOnly((message) => {
   message.reply('🔄 Syncing with GitHub...');
   process.send({ type: 'sync', userId: message.Author.ID, messageId: message.ID });
   
@@ -69,34 +90,12 @@ client.registerCommand('sync', {}, (message) => {
   };
   
   process.on('message', handler);
-})
+}))
 
-client.registerCommand('restart', {}, (message) => {
-  if (message.Author.ID !== 1111) {
-    message.reply('❌ Access denied');
-    return;
-  }
-  
+client.registerCommand('restart', {}, adminOnly((message) => {
   message.reply('🔄 Restarting bot...');
   process.send({ type: 'restart', userId: message.Author.ID });
-})
+}))
 
 
 client.init();
-
-
-// import { ReconnectingWebSocket } from '@yurbajs/ws';
-
-// const ws = new ReconnectingWebSocket(`wss://api.yurba.one/ws?token=${process.env.TOKEN}`);
-
-// ws.on('message', (message) => {
-//   console.log('\n WS ::', JSON.stringify(JSON.parse(message), null, 2));
-// });
-
-// ws.on('open', () => {
-//   console.log('WebSocket connected!');
-// });
-
-// ws.on('error', (error) => {
-//   console.error('WebSocket error:', error);
-// });
