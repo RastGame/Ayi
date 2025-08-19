@@ -25,6 +25,7 @@ async function gitSync() {
         const beforeCommit = await runCommand('git rev-parse HEAD');
         console.log(`Before: ${beforeCommit.trim()}`);
         
+        await runCommand('git reset --hard HEAD');
         await runCommand('git pull');
         
         const afterCommit = await runCommand('git rev-parse HEAD');
