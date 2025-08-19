@@ -2,7 +2,7 @@ import { JSX, Builder, loadImage } from "canvacord";
 
 export class GreetingsCard extends Builder {
   constructor() {
-    super(930, 280);
+    super(910, 280);
     this.bootstrap({
       displayName: "",
       type: "welcome",
@@ -31,8 +31,13 @@ export class GreetingsCard extends Builder {
     return this;
   }
 
+  setMessage2(value) {
+    this.options.set("message2", value);
+    return this;
+  }
+
   async render() {
-    const { type, displayName, avatar, message } = this.options.getOptions();
+    const { type, displayName, avatar, message, message2 } = this.options.getOptions();
 
     const image = await loadImage(avatar);
 
@@ -41,6 +46,9 @@ export class GreetingsCard extends Builder {
       {
         className:
           "h-full w-full flex flex-col items-center justify-center bg-[#23272A] rounded-xl",
+        style: {
+          fontFamily: "DejaVuSans, Arial, sans-serif",
+        },
       },
       JSX.createElement(
         "div",
@@ -54,24 +62,54 @@ export class GreetingsCard extends Builder {
         }),
         JSX.createElement(
           "div",
-          { className: "flex flex-col ml-6" },
+          {
+            className: "flex flex-col ml-6",
+            style: {
+              fontFamily: "DejaVuSans, Arial, sans-serif",
+            },
+          },
           JSX.createElement(
             "h1",
-            { className: "text-5xl text-white font-bold m-0" },
-            type === "welcome" ? "Welcome" : "Goodbye",
-            ",",
+            {
+              className: "text-5xl text-white font-bold m-0",
+              style: {
+                fontFamily: "DejaVuSans, Arial, sans-serif",
+              },
+            },
+            type === "Вітаємо" ? "Вітаємо" : "Прощавай",
+            ", ",
             " ",
             JSX.createElement(
               "span",
-              { className: "text-blue-500" },
+              {
+                className: "text-blue-500",
+                style: {
+                  fontFamily: "DejaVuSans, Arial, sans-serif",
+                },
+              },
               displayName,
               "!"
             )
           ),
           JSX.createElement(
             "p",
-            { className: "text-gray-300 text-3xl m-0" },
+            {
+              className: "text-gray-300 text-3xl m-0",
+              style: {
+                fontFamily: "DejaVuSans, Arial, sans-serif",
+              },
+            },
             message
+          ),
+          JSX.createElement(
+            "p",
+            {
+              className: "text-gray-300 text-3xl m-0",
+              style: {
+                fontFamily: "DejaVuSans, Arial, sans-serif",
+              },
+            },
+            message2
           )
         )
       )
