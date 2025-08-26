@@ -91,7 +91,7 @@ client.registerCommand('info', {}, withCooldown(function info(message) {
   const minutes = Math.floor((uptime % 3600) / 60);
   const seconds = Math.floor(uptime % 60);
   const memUsage = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
-
+ 
   message.reply(
     "```" +
     `┌──  Ayi v${version}
