@@ -1,8 +1,8 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-
 import { Client } from 'yurba.js';
+import { connectDB } from './database.js';
 import pkg from '../package.json' with { type: "json" };
 const { version, author } = pkg;
 
@@ -69,7 +69,8 @@ function adminOnly(handler) {
   };
 }
 
-client.on('ready', () => {
+client.on('ready', async () => {
+  await connectDB();
   client.sendMessage(459, { text: 'Бот запущено'})
   console.log(`Бот запущено: ${client.user.Name}`);
 });

@@ -18,6 +18,7 @@
   "dependencies": {
     "canvacord": "^6.0.2",
     "dotenv": "^17.2.1",
+    "mongodb": "^6.3.0",
     "yurba.js": "1.0.0-next.1"
   }
 }
