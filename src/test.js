@@ -91,7 +91,7 @@ export class GreetingsCard extends Builder {
               "!"
             )
           ),
-          JSX.createElement(
+          JSX.createElement( 
             "p",
             {
               className: "text-gray-300 text-3xl m-0",
