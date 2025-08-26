@@ -203,7 +203,7 @@ client.registerCommand('testfont', {}, withCooldown(async function testfont(mess
 client.registerCommand('testcmd', { 'name': 'int' }, withCooldown(function testcmd(message, args) {
   message.reply(`test: ${args.name}`)
 }));
-
+ 
 client.registerCommand('profile', {}, withCooldown(async function profile(message) {
   try {
     const user = await User.findById(message.Author.ID);
