@@ -198,7 +198,7 @@ client.registerCommand('testfont', {}, withCooldown(async function testfont(mess
     console.error('Error in testfont command:', error);
     message.reply('❌ Помилка при тестуванні шрифту.');
   }
-}));
+})); 
 
 client.registerCommand('testcmd', { 'name': 'int' }, withCooldown(function testcmd(message, args) {
   message.reply(`test: ${args.name}`)
