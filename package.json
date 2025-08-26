@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js",
+    "start": "node src/index.js",
+    "serve": "node start.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -16,7 +17,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "canvacord": "^6.0.2",
-    "dotenv": "^17.2.0",
-    "yurba.js": "^0.1.12"
+    "dotenv": "^17.2.1",
+    "yurba.js": "1.0.0-next.1"
   }
 }

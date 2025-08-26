@@ -70,32 +70,9 @@ function adminOnly(handler) {
 }
 
 client.on('ready', () => {
-  client.sendMessage(459, 'Бот онлайн')
+  client.sendMessage(459, { text: 'Бот запущено'})
   console.log(`Бот запущено: ${client.user.Name}`);
 });
-
-
-
-// const OFF = ['read', 'typing', 'online'];
-
-// import { ReconnectingWebSocket } from '@yurbajs/ws';
-
-// const ws = new ReconnectingWebSocket(`wss://api.yurba.one/ws?token=${TOKEN}`);
-
-// ws.on('message', (data) =>  {
-//   const message = JSON.parse(data);
-//   if (!OFF.includes(message.Type)){
-//     const formattedOutput = 
-//       "```" +
-//       `┌──────────────────────
-// │   • Type: ${message.Type}
-// └──────────────────────` +
-//       "```";
-    
-//     client.sendMessage(489, JSON.stringify(message, null, 2) + '\n\n' + formattedOutput);
-//   }
-//   console.log(message)
-// });
 
 
 client.on('join', (message) => {
@@ -148,27 +125,13 @@ client.registerCommand('testcard', {}, withCooldown(async function testcard(mess
       .setMessage2("canvacord + yurba.js")
     const imageBuffer = await card.build({ format: "png" });
     
-    // Прямий HTTP запит до API
-    const formData = new FormData();
-    const blob = new Blob([imageBuffer], { type: 'image/png' });
-    formData.append('photo', blob, `card-${Date.now()}.png`);
-    formData.append('caption', 'Ayi card for: ' + message.Author.Link + ', ' + new Date().toLocaleString());    
-    formData.append('mode', 'public');
-
-    const response = await fetch('https://api.yurba.one/photos', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'token': process.env.TOKEN
-      },
-      body: formData
+    const photo = await client.api.photos.upload({
+      photo: imageBuffer,
+      filename: `card-${Date.now()}.png`,
+      caption: 'Ayi card for: ' + message.Author.Link + ', ' + new Date().toLocaleString(),
+      mode: 'public'
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const photo = await response.json();
     console.log('Photo uploaded:', photo);
     
     // Очищення кешу після відправки

@@ -12,11 +12,11 @@ importers:
         specifier: ^6.0.2
         version: 6.0.2
       dotenv:
-        specifier: ^17.2.0
-        version: 17.2.0
+        specifier: ^17.2.1
+        version: 17.2.1
       yurba.js:
-        specifier: ^0.1.12
-        version: 0.1.12
+        specifier: 1.0.0-next.1
+        version: 1.0.0-next.1
 
 packages:
 
@@ -268,14 +268,14 @@ packages:
   '@tybys/wasm-util@0.10.0':
     resolution: {integrity: sha512-VyyPYFlOMNylG45GoAe0xDoLwWuowvf92F9kySqzYh8vmYm7D2u4iUJKa1tOUpS70Ku13ASrOkS4ScXFsTaCNQ==}
 
-  '@yurbajs/rest@0.1.9':
-    resolution: {integrity: sha512-Zx0/APG9fYjrZryKpNMWfgoJBOVe/qxgLKQw/VhB5bdt+Anb46Ctt1CCAyBT68G3ZojgdrIOuMR2wYtSISoNmA==}
+  '@yurbajs/rest@1.0.0-next.1':
+    resolution: {integrity: sha512-NjfFIlDj2fT5JjoCXiMs0FPUWJyocTA8R9bzQHG+GtSFngWse4iOPTfBp4Qmxln/4pIVInlqpRzKzRbVKHehLg==}
 
-  '@yurbajs/types@0.1.8':
-    resolution: {integrity: sha512-mOCYqKm+hVGFZhTbg6sM+r95/np7KCHQeCwTQfRfy2m7+D07FIHHExlDqlXCPBm0vd9xFMMVIKkg6cvP595igQ==}
+  '@yurbajs/types@1.0.0-next.1':
+    resolution: {integrity: sha512-BafKuVh0x3pn5rafKBt7blvN2ybmV18iZ12gsbvDXhW3E9Aqtmj/At9dWGxp5LnQf/D4Now5SwxB1X1ZPpfKkQ==}
 
-  '@yurbajs/ws@0.1.7':
-    resolution: {integrity: sha512-b/r+PfagO6QQPzfJ4zHs38KnJwx9EiFHQqCQ/aWT5jyJp99GTCQMFT9VR+5cpovsODT0zcjJ6xvrto16LAvPqw==}
+  '@yurbajs/ws@1.0.0-next.1':
+    resolution: {integrity: sha512-yQz64eZHWxZnm5LZhkePI12tUap0ZGgerJCEbok2O86YArB1vx7VhRNK4O/rJPh33bNE36Y9azMZUyT5d4uelg==}
 
   abort-controller@3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
@@ -313,8 +313,8 @@ packages:
   css-to-react-native@3.2.0:
     resolution: {integrity: sha512-e8RKaLXMOFii+02mOlqwjbD00KSEKqblnpO9e++1aXS1fPQOpS1YoqdVHBqPjHNoxeF2mimzVqawm2KCbEdtHQ==}
 
-  dotenv@17.2.0:
-    resolution: {integrity: sha512-Q4sgBT60gzd0BB0lSyYD3xM4YxrXA9y4uBDof1JNYGzOXrQdQ6yX+7XIAqoFOGQFOTK1D3Hts5OllpxMDZFONQ==}
+  dotenv@17.2.1:
+    resolution: {integrity: sha512-kQhDYKZecqnM0fCnzI5eIv5L4cAe/iRI+HqMbO/hbRdTAeXDG+M9FjipUxNfbARuEg4iHIbhnhs78BCHNbSxEQ==}
     engines: {node: '>=12'}
 
   emoji-regex@10.4.0:
@@ -421,8 +421,8 @@ packages:
   yoga-wasm-web@0.3.3:
     resolution: {integrity: sha512-N+d4UJSJbt/R3wqY7Coqs5pcV0aUj2j9IaQ3rNj9bVCLld8tTGKRa2USARjnvZJWVx1NDmQev8EknoczaOQDOA==}
 
-  yurba.js@0.1.12:
-    resolution: {integrity: sha512-gYuhxRJimn6+nnuODdeKPM6FvgngXmtLKWsmWN3BbSUkDe/+Aq7P0QbFmkDIlU8gQNVvWOraJ+VWFRjcnX9NsA==}
+  yurba.js@1.0.0-next.1:
+    resolution: {integrity: sha512-D4tgJ44do5wLZ1OOGwz9NJJEzGMvb+kM9s1EKTIFC9k08seeqrgYr46it/9lY4f4OSUZRB0mG3+BnEoY3H+hmQ==}
 
 snapshots:
 
@@ -616,15 +616,15 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
-  '@yurbajs/rest@0.1.9':
+  '@yurbajs/rest@1.0.0-next.1':
     dependencies:
-      '@yurbajs/types': 0.1.8
+      '@yurbajs/types': 1.0.0-next.1
 
-  '@yurbajs/types@0.1.8': {}
+  '@yurbajs/types@1.0.0-next.1': {}
 
-  '@yurbajs/ws@0.1.7':
+  '@yurbajs/ws@1.0.0-next.1':
     dependencies:
-      '@yurbajs/types': 0.1.8
+      '@yurbajs/types': 1.0.0-next.1
       ws: 8.18.3
     transitivePeerDependencies:
       - bufferutil
@@ -669,7 +669,7 @@ snapshots:
       css-color-keywords: 1.0.0
       postcss-value-parser: 4.2.0
 
-  dotenv@17.2.0: {}
+  dotenv@17.2.1: {}
 
   emoji-regex@10.4.0: {}
 
@@ -767,11 +767,11 @@ snapshots:
 
   yoga-wasm-web@0.3.3: {}
 
-  yurba.js@0.1.12:
+  yurba.js@1.0.0-next.1:
     dependencies:
-      '@yurbajs/rest': 0.1.9
-      '@yurbajs/types': 0.1.8
-      '@yurbajs/ws': 0.1.7
+      '@yurbajs/rest': 1.0.0-next.1
+      '@yurbajs/types': 1.0.0-next.1
+      '@yurbajs/ws': 1.0.0-next.1
       events: 3.3.0
     transitivePeerDependencies:
       - bufferutil
