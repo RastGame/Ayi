@@ -25,7 +25,7 @@ export function withCooldown(handler, cooldownTime = 5000, maxUses = 3) {
     
     userCooldown.uses++;
     return handler(message, args);
-  };
+  }; 
 }
 
 export function adminOnly(handler) {
