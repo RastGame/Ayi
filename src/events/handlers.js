@@ -3,9 +3,17 @@ import { User } from '../models/User.js';
 
 export function registerEventHandlers(client) {
   client.on('ready', async () => {
-    await connectDB();
-    client.sendMessage(459, { text: 'Бот запущено'})
-    console.log(`Бот запущено: ${client.user.Name}`);
+    try {
+      if (!process.env.MONGO_URI) {
+        console.error('❌ MONGO_URI environment variable is not set');
+        return;
+      }
+      await connectDB();
+      client.sendMessage(459, { text: 'Бот запущено'})
+      console.log(`Бот запущено: ${client.user.Name}`);
+    } catch (error) {
+      console.error('❌ Failed to connect to database:', error.message);
+    }
   });
 
   client.on('message', async (message) => {

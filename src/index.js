@@ -3,22 +3,17 @@ dotenv.config();
 
 import { Client } from 'yurba.js';
 import { initFont } from './utils/font.js';
-import { registerEventHandlers } from './events/handlers.js';
-import { registerBasicCommands } from './commands/basic.js';
-import { registerDatabaseCommands } from './commands/database.js';
-import { registerCardCommands } from './commands/cards.js';
+import { loadCommands, loadEvents } from './utils/loader.js';
 
 const client = new Client(process.env.TOKEN, { prefix: '' });
 
 // Initialize font
 await initFont();
 
-// Register event handlers
-registerEventHandlers(client);
+// Auto-load events
+await loadEvents(client);
 
-// Register commands
-registerBasicCommands(client);
-registerDatabaseCommands(client);
-registerCardCommands(client);
+// Auto-load commands
+await loadCommands(client);
 
 client.init();
