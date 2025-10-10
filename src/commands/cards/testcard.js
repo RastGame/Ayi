@@ -1,15 +1,14 @@
-import { withCooldown } from '../../utils/decorators.js';
 import { GreetingsCard } from "../../test.js";
 import { CardService } from '../../modules/cards.js';
 
 export default {
-  name: 'testcard',
-  handler: withCooldown(async function testcard(message) {
+  name: 'card',
+  handler: async (message) => {
     try {
-      const avatar = await message.client.getPhoto(message.Author.Avatar);
+      console.log(JSON.stringify(message, null, 2))
 
       const card = new GreetingsCard()
-        .setAvatar(avatar.Url)
+        .setAvatar(message.Author.Avatar?.Url || '')
         .setDisplayName(' ' + message.Author.Name + message.Author.Surname)
         .setType("Вітаємо")
         .setMessage("Карточка створена з використанням:")
@@ -26,8 +25,8 @@ export default {
 
       await message.reply(``, [photo.ID]);
     } catch (error) {
-      console.error('Error in testcard command:', error);
-      message.reply('❌ An error occurred while generating the card.');
+      console.error('Error in card command:', error);
+      message.reply('❌ Помилка при створенні карточки.');
     }
-  }, 5000, 1)
+  }
 };
