@@ -1,79 +1,55 @@
-import fs from 'fs';
-import path from 'path';
+import { readdirSync } from 'fs';
+import { join, resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
-export async function loadCommands(client, commandsPath = '../commands') {
-  const commandsDir = path.resolve(__dirname, commandsPath);
-  
-  if (!fs.existsSync(commandsDir)) {
-    console.warn(`Commands folder not found: ${commandsDir}`);
-    return;
-  }
-  
-  async function loadFromDir(dir) {
-    const items = fs.readdirSync(dir, { withFileTypes: true });
-    
+async function loadFiles(dir, handler) {
+  try {
+    const items = readdirSync(dir, { withFileTypes: true });
     for (const item of items) {
-      const itemPath = path.join(dir, item.name);
-      
+      const path = join(dir, item.name);
       if (item.isDirectory()) {
-        await loadFromDir(itemPath);
-      } else if (item.isFile() && item.name.endsWith('.js')) {
-        try {
-          const module = await import(`file://${itemPath}`);
-          const command = module.default;
-          
-          if (!command?.name || !command?.handler) {
-            console.error(`Error in ${itemPath}: command must have 'name' and 'handler' properties`);
-            continue;
-          }
-          
-          client.registerCommand(command.name, command.args || {}, command.handler);
-          console.log(`✅ Loaded command: ${command.name}`);
-        } catch (error) {
-          console.error(`❌ Error loading command from ${itemPath}:`, error.message);
-        }
+        await loadFiles(path, handler);
+      } else if (item.name.endsWith('.js')) {
+        const module = await import(`file://${path}`);
+        await handler(module.default, path);
       }
     }
+  } catch (error) {
+    console.warn(`Folder not found: ${dir}`);
   }
-  
-  await loadFromDir(commandsDir);
 }
 
-export async function loadEvents(client, eventsPath = '../events') {
-  const eventsDir = path.resolve(__dirname, eventsPath);
-  
-  if (!fs.existsSync(eventsDir)) {
-    console.warn(`Events folder not found: ${eventsDir}`);
-    return;
-  }
-  
-  const items = fs.readdirSync(eventsDir);
-  
-  for (const item of items) {
-    if (item.endsWith('.js')) {
-      try {
-        const itemPath = path.join(eventsDir, item);
-        const module = await import(`file://${itemPath}`);
-        const event = module.default;
-        
-        if (!event?.name || !event?.handler) {
-          console.error(`Error in ${item}: event must have 'name' and 'handler' properties`);
-          continue;
-        }
-        
-        if (event.once) {
-          client.once(event.name, event.handler);
-        } else {
-          client.on(event.name, event.handler);
-        }
-        
-        console.log(`✅ Loaded event: ${event.name}`);
-      } catch (error) {
-        console.error(`❌ Error loading event from ${item}:`, error.message);
-      }
+export async function loadCommands(client, path = '../commands') {
+  await loadFiles(resolve(__dirname, path), (cmd, file) => {
+    if (!cmd?.name || !cmd?.handler) {
+      console.error(`Invalid command in ${file}`);
+      return;
     }
-  }
+    client.registerCommand(cmd.name, cmd.args || {}, (message, args) => cmd.handler(client, message, args));
+    console.log(`✅ Command: ${cmd.name}`);
+  });
+}
+
+export async function loadEvents(client, path = '../events') {
+  await loadFiles(resolve(__dirname, path), (event, file) => {
+    if (!event?.name || !event?.handler) {
+      console.error(`Invalid event in ${file}`);
+      return;
+    }
+    client[event.once ? 'once' : 'on'](event.name, (...args) => event.handler(client, ...args));
+    console.log(`✅ Event: ${event.name}`);
+  });
+}
+
+export async function loadSlashCommands(client, path = '../slash') {
+  await loadFiles(resolve(__dirname, path), (slash, file) => {
+    if (!slash?.data || !slash?.execute) {
+      console.error(`Invalid slash command in ${file}`);
+      return;
+    }
+    client.slashCommands.set(slash.data.name, slash);
+    console.log(`✅ Slash: ${slash.data.name}`);
+  });
 }
