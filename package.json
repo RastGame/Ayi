@@ -7,6 +7,7 @@
   "scripts": {
     "start": "node src/index.js",
     "serve": "node start.js",
+    "dev": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -20,5 +21,8 @@
     "dotenv": "^17.2.3",
     "mongodb": "^6.20.0",
     "yurba.js": "1.0.0-next.6"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }

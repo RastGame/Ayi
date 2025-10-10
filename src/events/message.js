@@ -9,7 +9,7 @@ export default {
         $set: { lastActive: new Date() }
       });
     } catch (error) {
-      // Ignore errors for message counting
+      console.error('Error in message handler:', error);
     }
   }
 };
