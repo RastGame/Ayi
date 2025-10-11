@@ -16,4 +16,5 @@ await loadEvents(client);
 // Auto-load commands
 await loadCommands(client);
 
+
 client.init();
