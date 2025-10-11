@@ -10,19 +10,18 @@ const openai = new OpenAI({
     "X-Title": "https://ani.pp.ua", // Optional. Site title for rankings on openrouter.ai.
   },
 });
-async function main(promt) {
+async function main(prompt) {
   const completion = await openai.chat.completions.create({
     model: "qwen/qwen3-coder:free",
     messages: [
       {
         "role": "user",
-        "content": promt
+        "content": prompt
       }
     ],
-    
   });
 
-  console.log(completion.choices[0].message);
+  return completion.choices[0].message.content;
 }
 
 
@@ -31,12 +30,16 @@ export default {
   args: { prompt: 'string' },
   handler: async (client, message, args) => {
     try {
-        if (message.Author.ID !== 1111) await message.reply(`False: `);
+        if (message.Author.ID !== 1111) return await message.reply(`Access denied`);
 
         const response = await main(args.prompt);
-
-        await message.reply(`True: ${response}`);
+        await message.reply(`${response}`);
     } catch (error) {
+      if (error.status === 429) {
+        await message.reply('API rate limit exceeded. Please try again later.');
+      } else {
+        await message.reply('An error occurred while processing your request.');
+      }
       console.error('Error in ask command:', error);
     }
   }
