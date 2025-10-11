@@ -11,26 +11,19 @@ const openai = new OpenAI({
   },
 });
 
-async function main(prompt, image) {
+async function main(prompt, imageUrl = null) {
+  const content = [{ type: "text", text: prompt }];
+  
+  if (imageUrl) {
+    content.push({
+      type: "image_url",
+      image_url: { url: imageUrl }
+    });
+  }
+
   const completion = await openai.chat.completions.create({
     model: "mistralai/mistral-small-3.2-24b-instruct:free",
-    messages: [
-      {
-        role: "user",
-        content: [
-          {
-            type: "text",
-            text: prompt
-          },
-          {
-            type: "image_url",
-            image_url: {
-              url: "https://cdn.yurba.one/photos/1418.jpg"
-            }
-          }
-        ]
-      }
-    ],
+    messages: [{ role: "user", content }]
   });
 
   return completion.choices[0].message.content;
@@ -46,15 +39,18 @@ export default {
         if (message.Author.ID !== 1111) return await message.reply(`Access denied`);
         
         let prompt = args.prompt;
+        let imageUrl = null;
         
-        if (message.Photos) // [2222 (ід зображення)] а якщо більше чим 1 то тільки перше 
+        if (message.Photos && message.Photos.length > 0) {
+          imageUrl = `https://cdn.yurba.one/photos/${message.Photos[0]}.jpg`;
+        }
 
         if (!prompt) {
           return await message.reply('Please provide a prompt. Usage: !ask <your question>');
         }
         
         console.log('Prompt:', prompt);
-        const response = await main(prompt);
+        const response = await main(prompt, imageUrl);
         await message.reply(`${response}`);
     } catch (error) {
       if (error.status === 429) {
