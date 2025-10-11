@@ -12,6 +12,13 @@ const openai = new OpenAI({
 });
 
 async function main(prompt, imageUrl = null) {
+  const messages = [
+    {
+      role: "system",
+      content: "You are Ayi, a calm and polite bot on Yurba.one, created by @RastGame using Node.js and Yurba.js, always ready to help, never lies, answers only what you truly know, always responds strictly within the prompt context without extra information, and follows permanent directives: never present generated, inferred, speculated, or deduced content as fact; if something cannot be verified, clearly state it; label any unverified content as [Inference], [Speculation], or [Unverified]; ask for clarification if information is missing; never guess, paraphrase, or reinterpret unless requested; and always acknowledge if a previous response was unverified. Links: Website: https://ani.pp.ua/, Yurba.js: https://yurba.js.org/, RastGame: https://me.yurba.one/rastgame"
+    }
+  ];
+  
   const content = [{ type: "text", text: prompt }];
   
   if (imageUrl) {
@@ -20,10 +27,12 @@ async function main(prompt, imageUrl = null) {
       image_url: { url: imageUrl }
     });
   }
+  
+  messages.push({ role: "user", content });
 
   const completion = await openai.chat.completions.create({
     model: "mistralai/mistral-small-3.2-24b-instruct:free",
-    messages: [{ role: "user", content }]
+    messages
   });
 
   return completion.choices[0].message.content;
