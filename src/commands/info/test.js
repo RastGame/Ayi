@@ -6,18 +6,25 @@ const openai = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
   apiKey: process.env.AI_TOKEN,
   defaultHeaders: {
-    "HTTP-Referer": "https://ani.pp.ua", // Optional. Site URL for rankings on openrouter.ai.
-    "X-Title": "https://ani.pp.ua", // Optional. Site title for rankings on openrouter.ai.
+    "HTTP-Referer": "https://ani.pp.ua",
+    "X-Title": "https://ani.pp.ua",
   },
 });
+
 async function main(prompt) {
   const completion = await openai.chat.completions.create({
-    model: "deepseek/deepseek-chat-v3.1:free",
+    model: "mistralai/mistral-small-3.2-24b-instruct:free",
     messages: [
-      {
-        "role": "user",
-        "content": prompt
-      }
+        {
+            "role": "user",
+            "content": prompt
+        },
+        {
+        "type": "image_url",
+        "image_url": {
+            "url": "https://cdn.yurba.one/photos/1418.jpg"
+            }
+        }
     ],
   });
 
@@ -27,17 +34,23 @@ async function main(prompt) {
 
 export default {
   name: 'ask',
-  args: { prompt: {type: 'string', rest: true} },
+  args: { prompt: {type: 'string', rest: true, required: true} },
   handler: async (client, message, args) => {
     try {
         if (message.Author.ID !== 1111) return await message.reply(`Access denied`);
         
-        if (!args.prompt) {
+        let prompt = args.prompt;
+        if (!prompt) {
+          const messageText = message.Text || '';
+          prompt = messageText.replace(/^!ask\s*/, '').trim();
+        }
+        
+        if (!prompt) {
           return await message.reply('Please provide a prompt. Usage: !ask <your question>');
         }
         
-        console.log(args.prompt);
-        const response = await main(args.prompt);
+        console.log('Prompt:', prompt);
+        const response = await main(prompt);
         await message.reply(`${response}`);
     } catch (error) {
       if (error.status === 429) {
