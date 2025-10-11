@@ -11,25 +11,31 @@ const openai = new OpenAI({
   },
 });
 
-async function main(prompt) {
+async function main(prompt, image) {
   const completion = await openai.chat.completions.create({
     model: "mistralai/mistral-small-3.2-24b-instruct:free",
     messages: [
-        {
-            "role": "user",
-            "content": prompt
-        },
-        {
-        "type": "image_url",
-        "image_url": {
-            "url": "https://cdn.yurba.one/photos/1418.jpg"
+      {
+        role: "user",
+        content: [
+          {
+            type: "text",
+            text: prompt
+          },
+          {
+            type: "image_url",
+            image_url: {
+              url: "https://cdn.yurba.one/photos/1418.jpg"
             }
-        }
+          }
+        ]
+      }
     ],
   });
 
   return completion.choices[0].message.content;
 }
+
 
 
 export default {
@@ -40,11 +46,9 @@ export default {
         if (message.Author.ID !== 1111) return await message.reply(`Access denied`);
         
         let prompt = args.prompt;
-        if (!prompt) {
-          const messageText = message.Text || '';
-          prompt = messageText.replace(/^!ask\s*/, '').trim();
-        }
         
+        if (message.Photos) // [2222 (ід зображення)] а якщо більше чим 1 то тільки перше 
+
         if (!prompt) {
           return await message.reply('Please provide a prompt. Usage: !ask <your question>');
         }
