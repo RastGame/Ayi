@@ -1,7 +1,7 @@
-import { GreetingsCard } from "../../test.js";
+import { GreetingsCard } from "../../modules/cards.js";
 
 export default {
-  name: 'card',
+  name: 'rank',
   handler: async (client, message) => {
     try {
 
@@ -18,7 +18,7 @@ export default {
         'Ayi card for: ' + message.Author.Link + ', ' + new Date().toLocaleString(),
         'public'
       );
-
+      
      console.log(JSON.stringify(photo, null, 2))
 
       await message.reply(``, [photo.ID]);

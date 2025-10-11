@@ -28,8 +28,17 @@ export async function loadCommands(client, path = '../commands') {
       return;
     }
     client.registerCommand(cmd.name, cmd.args || {}, (message, args) => cmd.handler(client, message, args));
+    client.commandRegistry?.set(cmd.name, { description: cmd.description, category: getCategory(file) });
     console.log(`✅ Command: ${cmd.name}`);
   });
+}
+
+function getCategory(filePath) {
+  const parts = filePath.split(/[\/\\]/);
+  const commandsIndex = parts.findIndex(part => part === 'commands');
+  return commandsIndex !== -1 && parts[commandsIndex + 1] !== undefined && !parts[commandsIndex + 1].endsWith('.js') 
+    ? parts[commandsIndex + 1] 
+    : 'general';
 }
 
 export async function loadEvents(client, path = '../events') {

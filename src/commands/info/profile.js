@@ -1,8 +1,8 @@
-import { User } from '../models/User.js';
+import { User } from '../../models/User.js';
 
 export default {
   name: 'profile',
-  handler: async (message) => {
+  handler: async (client, message) => {
     try {
       const user = await User.findById(message.Author.ID);
       if (!user) {

@@ -5,7 +5,7 @@ export class GreetingsCard extends Builder {
     super(910, 280);
     this.bootstrap({
       displayName: "",
-      type: "welcome",
+      type: "",
       avatar: "",
       message: "",
     });
