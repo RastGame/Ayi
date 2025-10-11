@@ -12,7 +12,7 @@ const openai = new OpenAI({
 });
 async function main(prompt) {
   const completion = await openai.chat.completions.create({
-    model: "qwen/qwen3-coder:free",
+    model: "deepseek/deepseek-chat-v3.1:free",
     messages: [
       {
         "role": "user",
@@ -27,11 +27,16 @@ async function main(prompt) {
 
 export default {
   name: 'ask',
-  args: { prompt: 'string' },
+  args: { prompt: {type: 'string', rest: true} },
   handler: async (client, message, args) => {
     try {
         if (message.Author.ID !== 1111) return await message.reply(`Access denied`);
-
+        
+        if (!args.prompt) {
+          return await message.reply('Please provide a prompt. Usage: !ask <your question>');
+        }
+        
+        console.log(args.prompt);
         const response = await main(args.prompt);
         await message.reply(`${response}`);
     } catch (error) {
