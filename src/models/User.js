@@ -13,6 +13,6 @@ export class User {
 
   static async updateById(id, update) {
     const db = getDB();
-    return await db.collection('users').updateOne({ _id: id }, { $set: update });
+    return await db.collection('users').updateOne({ _id: id }, update);
   }
 }
