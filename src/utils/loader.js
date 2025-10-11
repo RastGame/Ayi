@@ -12,17 +12,23 @@ async function loadFiles(dir, handler) {
       if (item.isDirectory()) {
         await loadFiles(path, handler);
       } else if (item.name.endsWith('.js')) {
-        const module = await import(`file://${path}`);
-        await handler(module.default, path);
+        try {
+          const module = await import(`file://${path}`);
+          await handler(module.default, path);
+        } catch (importError) {
+          console.error(`Error importing ${path}:`, importError.message);
+        }
       }
     }
   } catch (error) {
-    console.warn(`Folder not found: ${dir}`);
+    // Тихо ігноруємо помилки читання папок (порожні папки тощо)
   }
 }
 
 export async function loadCommands(client, path = '../commands') {
-  await loadFiles(resolve(__dirname, path), (cmd, file) => {
+  const commandsPath = resolve(__dirname, path);
+  console.log(`Loading commands from: ${commandsPath}`);
+  await loadFiles(commandsPath, (cmd, file) => {
     if (!cmd?.name || !cmd?.handler) {
       console.error(`Invalid command in ${file}`);
       return;
@@ -42,7 +48,9 @@ function getCategory(filePath) {
 }
 
 export async function loadEvents(client, path = '../events') {
-  await loadFiles(resolve(__dirname, path), (event, file) => {
+  const eventsPath = resolve(__dirname, path);
+  console.log(`Loading events from: ${eventsPath}`);
+  await loadFiles(eventsPath, (event, file) => {
     if (!event?.name || !event?.handler) {
       console.error(`Invalid event in ${file}`);
       return;
@@ -53,7 +61,8 @@ export async function loadEvents(client, path = '../events') {
 }
 
 export async function loadSlashCommands(client, path = '../slash') {
-  await loadFiles(resolve(__dirname, path), (slash, file) => {
+  const slashPath = resolve(__dirname, path);
+  await loadFiles(slashPath, (slash, file) => {
     if (!slash?.data || !slash?.execute) {
       console.error(`Invalid slash command in ${file}`);
       return;
