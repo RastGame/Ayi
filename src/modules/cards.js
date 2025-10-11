@@ -1,4 +1,4 @@
-import { JSX, Builder, loadImage } from "canvacord";
+import { JSX, Builder, RankCardBuilder, loadImage } from "canvacord";
 
 export class GreetingsCard extends Builder {
   constructor() {
@@ -116,3 +116,5 @@ export class GreetingsCard extends Builder {
     );
   }
 }
+
+

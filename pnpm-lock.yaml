@@ -17,6 +17,9 @@ importers:
       mongodb:
         specifier: ^6.20.0
         version: 6.20.0
+      openai:
+        specifier: ^6.3.0
+        version: 6.3.0(ws@8.18.3)
       yurba.js:
         specifier: 1.0.0-next.6
         version: 1.0.0-next.6
@@ -490,6 +493,18 @@ packages:
   normalize-path@3.0.0:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==}
     engines: {node: '>=0.10.0'}
+
+  openai@6.3.0:
+    resolution: {integrity: sha512-E6vOGtZvdcb4yXQ5jXvDlUG599OhIkb/GjBLZXS+qk0HF+PJReIldEc9hM8Ft81vn+N6dRdFRb7BZNK8bbvXrw==}
+    hasBin: true
+    peerDependencies:
+      ws: ^8.18.0
+      zod: ^3.25 || ^4.0
+    peerDependenciesMeta:
+      ws:
+        optional: true
+      zod:
+        optional: true
 
   pako@0.2.9:
     resolution: {integrity: sha512-NUcwaKxUxWrZLpDG+z/xZaCgQITkA/Dv4V/T6bw7VON6l1Xz/VnrBqrYjZQ12TamKHzITTfOEIYUj48y2KXImA==}
@@ -1005,6 +1020,10 @@ snapshots:
       undefsafe: 2.0.5
 
   normalize-path@3.0.0: {}
+
+  openai@6.3.0(ws@8.18.3):
+    optionalDependencies:
+      ws: 8.18.3
 
   pako@0.2.9: {}
 
