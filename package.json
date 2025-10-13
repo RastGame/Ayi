@@ -21,7 +21,7 @@
     "dotenv": "^17.2.3",
     "mongodb": "^6.20.0",
     "openai": "^6.3.0",
-    "yurba.js": "1.0.0-next.6"
+    "yurba.js": "1.0.0-next.7"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"

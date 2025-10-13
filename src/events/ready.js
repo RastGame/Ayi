@@ -1,4 +1,4 @@
-import { connectDB } from '../database.js';
+import { connectDB } from '../modules/database.js';
 
 export default {
   name: 'ready',

@@ -21,8 +21,8 @@ importers:
         specifier: ^6.3.0
         version: 6.3.0(ws@8.18.3)
       yurba.js:
-        specifier: 1.0.0-next.6
-        version: 1.0.0-next.6
+        specifier: 1.0.0-next.7
+        version: 1.0.0-next.7
     devDependencies:
       nodemon:
         specifier: ^3.1.10
@@ -187,8 +187,8 @@ packages:
     resolution: {integrity: sha512-i5zlU1EgNBlgRjxMC1CgClZlHyGGnR1upLV64s8t5N+w9/lB7plHcb+rBJ5YmSP9Mho5RvLQpZ/ScaoJNNcnNg==}
     engines: {node: '>= 10'}
 
-  '@napi-rs/wasm-runtime@1.0.6':
-    resolution: {integrity: sha512-DXj75ewm11LIWUk198QSKUTxjyRjsBwk09MuMk5DGK+GDUtyPhhEHOGP/Xwwj3DjQXXkivoBirmOnKrLfc0+9g==}
+  '@napi-rs/wasm-runtime@1.0.7':
+    resolution: {integrity: sha512-SeDnOO0Tk7Okiq6DbXmmBODgOAb9dp9gjlphokTUxmt8U3liIP1ZsozBahH69j/RJv+Rfs6IwUKHTgQYJ/HBAw==}
 
   '@resvg/resvg-js-android-arm-eabi@2.6.2':
     resolution: {integrity: sha512-FrJibrAk6v29eabIPgcTUMPXiEz8ssrAk7TXxsiZzww9UTQ1Z5KAbFJs+Z0Ez+VZTYgnE5IQJqBcoSiMebtPHA==}
@@ -287,14 +287,14 @@ packages:
   '@types/whatwg-url@11.0.5':
     resolution: {integrity: sha512-coYR071JRaHa+xoEvvYqvnIHaVqaYrLPbsufM9BF63HkwI5Lgmy2QR8Q5K/lYDYo5AK82wOvSOS0UsLTpTG7uQ==}
 
-  '@yurbajs/rest@1.0.0-next.6':
-    resolution: {integrity: sha512-L1lD0iPjeTDkxXRl2YXkgi5Cn6og8OFVW618vGw1nUwNhwDup770IvtJoc/wlxFE8nZXi5DdIyRCimo+G4SyFw==}
+  '@yurbajs/rest@1.0.0-next.7':
+    resolution: {integrity: sha512-d0ES7kwFUwVUK05cJB5PVg6RwNv9aodJr7G0Xl+UNRO780eI/qfUcH7rqHKe8Tns9yL9FCDz48qaHNIeJeVJqQ==}
 
-  '@yurbajs/types@1.0.0-next.4':
-    resolution: {integrity: sha512-/OwSjUzSHBpcPKiWnBbSRdkquAjUxWeguk6HCPj/xBXVBHQ2lSM8m23p05HelPDVZBfcE/PHUpwlX6MUeyu0/g==}
+  '@yurbajs/types@1.0.0-next.5':
+    resolution: {integrity: sha512-nCwCGx/6IOtO39nEYePyHF0eAeUxkZJ7D5lYcyGEYiFuOlLzBh5gOujbVT2PAjORnxB/7n9lJidm6rYpvJp/CQ==}
 
-  '@yurbajs/ws@1.0.0-next.4':
-    resolution: {integrity: sha512-XQx8s7q/LIhwiTmppMMBk4/BrR8DAm5VN/4TSh+At+tuanuqY6LEEyGqwEfujHsft7/41In1w++q+K2PCzJOUg==}
+  '@yurbajs/ws@1.0.0-next.5':
+    resolution: {integrity: sha512-hnBY0pYBpmwnkXvMOzs3lwkI3XRQ0gZOalBDeIieWyx39/niClcW4Gcgo1U9EaCK3HXeSWw70saTM55sAh42kg==}
 
   abort-controller@3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
@@ -633,8 +633,8 @@ packages:
   yoga-layout@3.2.1:
     resolution: {integrity: sha512-0LPOt3AxKqMdFBZA3HBAt/t/8vIKq7VaQYbuA8WxCgung+p9TVyKRYdpvCb80HcdTN2NkbIKbhNwKUfm3tQywQ==}
 
-  yurba.js@1.0.0-next.6:
-    resolution: {integrity: sha512-IJhyHDashxHHvPwfRK01c9ZAVJokFPo8lCD+hvkC/pNB9xbqar9lkM6F43K//H7oETkNNADzsQueN2mfsEmULg==}
+  yurba.js@1.0.0-next.7:
+    resolution: {integrity: sha512-Fpxz2GzS0XstG/M334mp+40ulABwV+ZMUmvwKcyauci0g74V7h0Q8AF1rBSUKjLUneYzTRtSpfWgeQ2mbyhFPw==}
 
 snapshots:
 
@@ -730,7 +730,7 @@ snapshots:
 
   '@napi-rs/image-wasm32-wasi@1.11.2':
     dependencies:
-      '@napi-rs/wasm-runtime': 1.0.6
+      '@napi-rs/wasm-runtime': 1.0.7
     optional: true
 
   '@napi-rs/image-win32-arm64-msvc@1.11.2':
@@ -758,7 +758,7 @@ snapshots:
       '@napi-rs/image-win32-ia32-msvc': 1.11.2
       '@napi-rs/image-win32-x64-msvc': 1.11.2
 
-  '@napi-rs/wasm-runtime@1.0.6':
+  '@napi-rs/wasm-runtime@1.0.7':
     dependencies:
       '@emnapi/core': 1.5.0
       '@emnapi/runtime': 1.5.0
@@ -838,15 +838,15 @@ snapshots:
     dependencies:
       '@types/webidl-conversions': 7.0.3
 
-  '@yurbajs/rest@1.0.0-next.6':
+  '@yurbajs/rest@1.0.0-next.7':
     dependencies:
-      '@yurbajs/types': 1.0.0-next.4
+      '@yurbajs/types': 1.0.0-next.5
 
-  '@yurbajs/types@1.0.0-next.4': {}
+  '@yurbajs/types@1.0.0-next.5': {}
 
-  '@yurbajs/ws@1.0.0-next.4':
+  '@yurbajs/ws@1.0.0-next.5':
     dependencies:
-      '@yurbajs/types': 1.0.0-next.4
+      '@yurbajs/types': 1.0.0-next.5
       ws: 8.18.3
     transitivePeerDependencies:
       - bufferutil
@@ -1140,11 +1140,11 @@ snapshots:
 
   yoga-layout@3.2.1: {}
 
-  yurba.js@1.0.0-next.6:
+  yurba.js@1.0.0-next.7:
     dependencies:
-      '@yurbajs/rest': 1.0.0-next.6
-      '@yurbajs/types': 1.0.0-next.4
-      '@yurbajs/ws': 1.0.0-next.4
+      '@yurbajs/rest': 1.0.0-next.7
+      '@yurbajs/types': 1.0.0-next.5
+      '@yurbajs/ws': 1.0.0-next.5
       events: 3.3.0
     transitivePeerDependencies:
       - bufferutil

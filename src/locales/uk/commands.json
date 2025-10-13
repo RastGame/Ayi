@@ -1,0 +1,37 @@
+{
+    "info": {
+        "emoji": ":mag_right:",
+        "commands": {
+            "info": {
+                "description": "Інформація про мене",
+                "usage": "info"
+            },
+            "help": {
+                "description": "Команди",
+                "usage": "help"
+            },
+            "profile": {
+                "description": "Профіль",
+                "usage": "profile (user)"
+            },
+        }
+    },
+    "utils": {
+        "emoji": ":hammer_and_wrench:",
+        "commands": {
+            "user": {
+                "description": "Інформація про користувача",
+                "usage": "user (user)"
+            }
+        }
+    },
+    "AI": {
+        "emoji": ":dizzy:",
+        "commands": {
+            "ask": {
+                "description": "Запитати щось у ШІ",
+                "usage": "ask [ Промт ]"
+            }
+        }
+    }
+}
