@@ -45,7 +45,7 @@ export default {
   args: { prompt: {type: 'string', rest: true, required: true} },
   handler: async (client, message, args) => {
     try {
-        if (message.Author.ID !== 1111) return await message.reply(`Access denied`);
+        if (message.Author.ID !== 1111) return await message.reply(`Поки не доступно`);
         
         let prompt = args.prompt;
         let imageUrl = null;

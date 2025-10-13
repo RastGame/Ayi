@@ -11,8 +11,8 @@ export async function connectDB() {
     }
     client = new MongoClient(mongoUri);
     await client.connect();
-    db = client.db();
-    console.log('✅ Connected to MongoDB');
+    db = client.db('Ayi');
+    console.log('✅ Connected to MongoDB database: Ayi');
   }
   return db;
 }
