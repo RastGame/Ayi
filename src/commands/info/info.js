@@ -22,20 +22,21 @@ function getClockIcon(uptimeSeconds) {
   return clockIcons[iconIndex];
 }
 
-// перетворює uptime у стиль "6 секунд тому", "3 хвилини тому", "2 години тому", "1 день тому"
+// перетворює uptime у стиль "2 години", "1 день", "5 днів", "тиждень"
 function formatRelativeTime(seconds) {
   const units = [
     { limit: 60, divisor: 1, singular: 'секунда', plural: 'секунди', plural5: 'секунд' },
     { limit: 3600, divisor: 60, singular: 'хвилина', plural: 'хвилини', plural5: 'хвилин' },
     { limit: 86400, divisor: 3600, singular: 'година', plural: 'години', plural5: 'годин' },
-    { limit: Infinity, divisor: 86400, singular: 'день', plural: 'дні', plural5: 'днів' }
+    { limit: 604800, divisor: 86400, singular: 'день', plural: 'дні', plural5: 'днів' },
+    { limit: Infinity, divisor: 604800, singular: 'тиждень', plural: 'тижні', plural5: 'тижнів' }
   ];
 
   for (const unit of units) {
     if (seconds < unit.limit) {
       const value = Math.floor(seconds / unit.divisor);
       const word = getUkrainianPlural(value, unit.singular, unit.plural, unit.plural5);
-      return `${value} ${word} тому`;
+      return `${value} ${word}`;
     }
   }
 }

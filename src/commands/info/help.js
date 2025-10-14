@@ -19,14 +19,14 @@ export default {
     ];
     
     for (const [categoryName, categoryData] of Object.entries(commandsData)) {
-      helpText.push(`\n₊ ${categoryData.emoji} ⊹ __${categoryName.charAt(0).toUpperCase() + categoryName.slice(1)}__`);
+      helpText.push(`\n₊ ${categoryData.emoji} ⊹ \` __${categoryName.charAt(0).toUpperCase() + categoryName.slice(1)}__\``);
       for (const [commandName, commandData] of Object.entries(categoryData.commands)) {
         helpText.push(`• **${commandName}** - ${commandData.description}`);
         helpText.push(`  └ \`${prefix}${commandData.usage}\``);
       }
     } 
     
-    helpText.push('\n╰───────────────────────────────╯');
+    helpText.push('\n╰───────────────────────────────╯\n⌞\`() - не обов\'зковий аргумент\`⌝\n⌞\`[] - обов\'язковий аргумент\`⌝');
     await message.reply(helpText.join('\n'));
   }
-};
+}; 

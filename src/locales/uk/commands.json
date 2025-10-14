@@ -1,5 +1,5 @@
 {
-    "info": {
+    "Інформації": {
         "emoji": ":mag_right:",
         "commands": {
             "info": {
@@ -16,7 +16,7 @@
             }
         }
     },
-    "utils": {
+    "Утилити": {
         "emoji": ":hammer_and_wrench:",
         "commands": {
             "user": {
@@ -25,7 +25,7 @@
             }
         }
     },
-    "AI": {
+    "ШІ": {
         "emoji": ":dizzy:",
         "commands": {
             "ask": {
