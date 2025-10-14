@@ -14,6 +14,7 @@ export default {
       }
 
       const user = await User.findByDialogAndUser(message.Dialog.ID, targetUser.ID);
+      
       if (!user) {
         await User.create(message.Dialog.ID, targetUser.ID);
         return message.reply(`🎆 Користувач @${targetUser.Link} доданий до рейтингу!`);
@@ -24,17 +25,16 @@ export default {
       const requiredXP = 1000;
       
       const card = new RankCardBuilder()
-        .setDisplayName(targetUser.Name)
+        .setDisplayName(targetUser.Name + ' ' + targetUser.Surname)
         .setUsername("@" + targetUser.Link)
         .setAvatar(targetUser.Avatar === 0 ? "https://via.placeholder.com/128" : "https://cdn.yurba.one/photos/" + targetUser.Avatar + ".jpg")
         .setCurrentXP(currentXP)
         .setRequiredXP(requiredXP)
         .setLevel(level)
         .setRank(1)
-        .setOverlay(90)
-        .setBackground("#808080")
-        .setStatus(targetUser.Online?.Status || 'offline')
 
+        .setStatus(targetUser.Online.Status)
+        .setBackgroundCrop({x: 300, y: 600})
         .setProgressCalculator((currentXP, requiredXP) => {
           const progress = (currentXP / requiredXP) * 100;
           return Math.max(0, Math.min(progress, 100));
@@ -43,12 +43,12 @@ export default {
           progressbar: {
             thumb: {
               style: {
-                backgroundColor: '#808080'
+                backgroundColor: '#ffffffff'
               },
             },
             track: {
               style: {
-                backgroundColor: "#faa61a"
+                backgroundColor: "#AFAACA"
               },
             },
           },
@@ -56,21 +56,21 @@ export default {
             level: {
               text: {
                 style: {
-                  color: "#faa61a",
+                  color: "#AFAACA",
                 },
               },
             },
             xp: {
               text: {
                 style: {
-                  color: "#faa61a",
+                  color: "#AFAACA",
                 },
               },
             },
             rank: {
               text: {
                 style: {
-                  color: "#faa61a",
+                  color: "#AFAACA",
                 },
               },
             },
