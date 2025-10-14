@@ -3,6 +3,7 @@ import path from 'path';
 
 export default {
   name: 'help',
+  args: {command: {type: 'string', required: false},
   description: 'Показує список доступних команд.',
   handler: async (client, message) => {
     const commandsData = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'src/locales/uk/commands.json'), 'utf8'));
