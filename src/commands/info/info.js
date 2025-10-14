@@ -54,7 +54,6 @@ function getUkrainianPlural(number, one, few, many) {
 
 export default {
   name: 'info',
-  description: 'Показує детальну інформацію про бота.',
   handler: async (client, message) => {
     const uptime = process.uptime();
     const memUsage = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);

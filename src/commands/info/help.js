@@ -3,8 +3,6 @@ import path from 'path';
 
 export default {
   name: 'help',
-  args: {command: {type: 'string', required: false},
-  description: 'Показує список доступних команд.',
   handler: async (client, message) => {
     const commandsData = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'src/locales/uk/commands.json'), 'utf8'));
     const prefix = client.prefix;
@@ -22,8 +20,8 @@ export default {
     for (const [categoryName, categoryData] of Object.entries(commandsData)) {
       helpText.push(`\n₊ ${categoryData.emoji} ⊹ \` __${categoryName.charAt(0).toUpperCase() + categoryName.slice(1)}__\``);
       for (const [commandName, commandData] of Object.entries(categoryData.commands)) {
-        helpText.push(`• **${commandName}** - ${commandData.description}`);
-        helpText.push(`  └ \`${prefix}${commandData.usage}\``);
+        helpText.push(`**${commandData.description}**`);
+        helpText.push(`  ⤷ \`${prefix}${commandData.usage}\``);
       }
     } 
     

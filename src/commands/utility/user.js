@@ -13,7 +13,7 @@ export default {
       `₊ :mountain: ⊹ Аватар: ${user.Avatar === 0 ? 'Немає' : `[${user.Avatar}](https://cdn.yurba.one/photos/${user.Avatar}.jpg)`}`,
       `₊ ${user.Sub === 0 ? 'x' : user.Sub === 1 ? ':dizzy:' : ':jumping_cat:'} ⊹ Підписка: ${user.Sub === 0 ? 'Немає' : user.Sub === 1 ? 'Yurba Plus' : 'Yurba Premium'}`,
       `₊ ${user.Verify === "" ? ':x:' : user.Verify === 'Default' ? '✅' : user.Verify === 'Organisation' ? '🏢' : '🏛️'} ⊹ Верифікація: ${user.Verify === "" ? 'Немає' : user.Verify === 'Default' ? 'Звичайна' : user.Verify === 'Organisation' ? 'Організація' : 'Уряд'}`,
-      `₊ ${user.Ban ? '🚫' : '✅'} ⊹ Забанений: ${user.Ban ? 'Так' : 'Ні'}`,
+      `₊ ${user.Ban ? '✅' : ':x:'} ⊹ Забанений: ${user.Ban ? 'Так' : 'Ні'}`,
       `╰───────────────────────────────╯`,
     ].join('\n');
 

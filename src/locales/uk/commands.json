@@ -22,6 +22,10 @@
             "user": {
                 "description": "Інформація про користувача",
                 "usage": "user (user)"
+            },
+            "addbot": {
+                "description": "Додати бота в групу",
+                "usage": "addbot [dialog.id]"
             }
         }
     },

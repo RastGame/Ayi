@@ -1,4 +1,4 @@
-import { getDB } from '../modules/database.js';
+import { getDB } from '../modules/db.js';
 
 export class User {
   static async findById(id) {
