@@ -45,7 +45,6 @@ export default {
   args: { prompt: {type: 'string', rest: true, required: true} },
   handler: async (client, message, args) => {
     try {
-        if (message.Author.ID !== 1111) return await message.reply(`Поки не доступно`);
         
         let prompt = args.prompt;
         let imageUrl = null;
@@ -63,7 +62,7 @@ export default {
         await message.reply(`${response}`);
     } catch (error) {
       if (error.status === 429) {
-        await message.reply('API rate limit exceeded. Please try again later.');
+        await message.reply('Ліміт.');
       } else {
         await message.reply('An error occurred while processing your request.');
       }

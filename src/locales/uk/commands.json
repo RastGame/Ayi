@@ -1,41 +1,50 @@
 {
-    "Інформації": {
-        "emoji": ":mag_right:",
-        "commands": {
-            "info": {
-                "description": "Інформація про мене",
-                "usage": "info"
-            },
-            "help": {
-                "description": "Команди",
-                "usage": "help"
-            },
-            "profile": {
-                "description": "Профіль",
-                "usage": "profile (user)"
-            }
-        }
-    },
-    "Утилити": {
-        "emoji": ":hammer_and_wrench:",
-        "commands": {
-            "user": {
-                "description": "Інформація про користувача",
-                "usage": "user (user)"
-            },
-            "addbot": {
-                "description": "Додати бота в групу",
-                "usage": "addbot [dialog.id]"
-            }
-        }
-    },
-    "ШІ": {
-        "emoji": ":dizzy:",
-        "commands": {
-            "ask": {
-                "description": "Запитати щось у ШІ",
-                "usage": "ask [ Промт ]"
-            }
-        }
+  "Інформація": {
+    "emoji": ":mag_right:",
+    "commands": {
+      "info": {
+        "description": "Інформація про мене",
+        "usage": "info"
+      },
+      "help": {
+        "description": "Список усіх команд",
+        "usage": "help"
+      },
+      "profile": {
+        "description": "Переглянути профіль користувача",
+        "usage": "profile (user)"
+      }
     }
+  },
+  "Утиліти": {
+    "emoji": ":hammer_and_wrench:",
+    "commands": {
+      "user": {
+        "description": "Інформація про користувача",
+        "usage": "user (user)"
+      },
+      "addbot": {
+        "description": "Додати бота до групи",
+        "usage": "addbot [dialog.id]"
+      }
+    }
+  },
+  "ШІ": {
+    "emoji": ":dizzy:",
+    "commands": {
+      "ask": {
+        "description": "Поставити запитання штучному інтелекту",
+        "usage": "ask [промт]"
+      }
+    }
+  },
+  "Рівні": {
+    "emoji": ":zap:",
+    "commands": {
+      "rank": {
+        "description": "Картка рівня користувача",
+        "usage": "rank (user)"
+      }
+    }
+  }
 }
