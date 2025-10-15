@@ -13,7 +13,7 @@ export default {
         return message.reply(`У користувача немає профілю`);
       }
 
-      const level = Math.floor(profile.xp / 1000) + 1;
+      const level = Math.floor(profile.xp / 1000);
       const currentLevelXP = profile.xp % 1000;
       const isPremium = profile.premium.next && new Date(profile.premium.next) > new Date();
       

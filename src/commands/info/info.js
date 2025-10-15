@@ -56,7 +56,6 @@ export default {
   name: 'info',
   handler: async (client, message) => {
     const uptime = process.uptime();
-    const memUsage = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
     const commandsCount = client.getCommands?.().length || 0;
 
     const clockIcon = getClockIcon(uptime);
@@ -68,7 +67,7 @@ export default {
       `₊ :pigeon: ⊹ Розробник: @${pkg.author}`,
       `₊ :game_die: ⊹ Команд: *${commandsCount}*`,
       `₊ ${clockIcon} ⊹ У мережі: *${relativeTime}*`,
-      `${client.version}`,
+      ``,
       `• Node.js: ${process.version}`,
       `• Yurba.js: v${pkg.dependencies?.['yurba.js'] || 'N/A'}`,
       `╰───────────────────────────────╯`,
