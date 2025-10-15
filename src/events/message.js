@@ -8,6 +8,8 @@ export default {
     try {
       if (!message.Author?.ID) return;
       
+      console.log(JSON.stringify(message, null, 2))
+
       // логіка на додавання користувача в базу якщо немає (Profiles)
       let profile = await Profile.findById(message.Author.ID);
       if (!profile) {
@@ -16,6 +18,11 @@ export default {
 
       if (message.Dialog.Type === 'group') {
         // логіка на додавання користувача в базу якщо немає (Users)
+                // логіка на додвання діалогу в базу (Dialogs)
+        let dialog = await Dialog.findById(message.Dialog.ID);
+        if (!dialog) {
+          return dialog = await Dialog.create(message.Dialog.ID);
+        }
         let user = await User.findByDialogAndUser(message.Dialog.ID, message.Author.ID);
         if (!user) {
           await User.create(message.Dialog.ID, message.Author.ID);
@@ -23,13 +30,7 @@ export default {
 
         // логіка на додавання користувачу xp (Users)
         const groupXP = Math.floor(Math.random() * 15) + 10; // 10-25 XP
-        await User.addXP(message.Dialog.ID, message.Author.ID, groupXP);
-
-        // логіка на додвання діалогу в базу (Dialogs)
-        let dialog = await Dialog.findById(message.Dialog.ID);
-        if (!dialog) {
-          await Dialog.create(message.Dialog.ID);
-        }
+        if (dialog.levels) await User.addXP(message.Dialog.ID, message.Author.ID, groupXP);
       }
 
       if (message.Dialog.Type != 'channel') {

@@ -68,7 +68,7 @@ export default {
       `₊ :pigeon: ⊹ Розробник: @${pkg.author}`,
       `₊ :game_die: ⊹ Команд: *${commandsCount}*`,
       `₊ ${clockIcon} ⊹ У мережі: *${relativeTime}*`,
-      ``,
+      `${client.version}`,
       `• Node.js: ${process.version}`,
       `• Yurba.js: v${pkg.dependencies?.['yurba.js'] || 'N/A'}`,
       `╰───────────────────────────────╯`,

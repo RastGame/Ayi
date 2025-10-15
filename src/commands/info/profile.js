@@ -8,10 +8,9 @@ export default {
       let user = args.user || message.Author;
       
       const profile = await Profile.findById(user.ID);
+
       if (!profile) {
-        await Profile.create(user.ID);
-        const newProfile = await Profile.findById(user.ID);
-        return message.reply(`🎆 Профіль створено для @${user.Link}!`);
+        return message.reply(`У користувача немає профілю`);
       }
 
       const level = Math.floor(profile.xp / 1000) + 1;

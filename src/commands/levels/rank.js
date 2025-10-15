@@ -1,6 +1,6 @@
 import { RankCardBuilder } from "canvacord";
 import { User } from '../../models/User.js';
-import { Profile } from '../../models/Profile.js';
+import { Dialog } from '../../models/Dialog.js';
 
 export default {
   name: 'rank',
@@ -8,16 +8,24 @@ export default {
   handler: async (client, message, args) => {
     try {
       let targetUser = args.user || message.Author;
-      
+
+      console.log(targetUser)
       if (message.Dialog.Type !== 'group') {
         return message.reply('❌ Команда доступна тільки в групах!');
       }
 
+      console.log(targetUser)
+
       const user = await User.findByDialogAndUser(message.Dialog.ID, targetUser.ID);
-      
+
+      let dialog = await Dialog.findById(message.Dialog.ID);
+      console.log(dialog)
+      if (!dialog.levels) {
+        return message.reply(':x: Рівні вимкнені');
+      }
+
       if (!user) {
-        await User.create(message.Dialog.ID, targetUser.ID);
-        return message.reply(`🎆 Користувач @${targetUser.Link} доданий до рейтингу!`);
+        return message.reply(`@${targetUser.Link} користувача немає в рейтингу`);
       }
 
       const level = Math.floor(user.xp / 1000) + 1;
@@ -27,14 +35,13 @@ export default {
       const card = new RankCardBuilder()
         .setDisplayName(targetUser.Name + ' ' + targetUser.Surname)
         .setUsername("@" + targetUser.Link)
-        .setAvatar(targetUser.Avatar === 0 ? "https://via.placeholder.com/128" : "https://cdn.yurba.one/photos/" + targetUser.Avatar + ".jpg")
+        .setAvatar(targetUser.Avatar === 0 ? "https://cdn.yurba.one/photos/3866.jpg?size=xlarge" : "https://cdn.yurba.one/photos/" + targetUser.Avatar + ".jpg")
         .setCurrentXP(currentXP)
         .setRequiredXP(requiredXP)
         .setLevel(level)
         .setRank(1)
 
         .setStatus(targetUser.Online.Status)
-        .setBackgroundCrop({x: 300, y: 600})
         .setProgressCalculator((currentXP, requiredXP) => {
           const progress = (currentXP / requiredXP) * 100;
           return Math.max(0, Math.min(progress, 100));
@@ -43,12 +50,13 @@ export default {
           progressbar: {
             thumb: {
               style: {
-                backgroundColor: '#ffffffff'
+                backgroundColor: '#ffffffff',
+                
               },
             },
             track: {
               style: {
-                backgroundColor: "#AFAACA"
+                backgroundColor: "#d1d1d4ff"
               },
             },
           },
@@ -56,21 +64,21 @@ export default {
             level: {
               text: {
                 style: {
-                  color: "#AFAACA",
+                  color: "#ead2ffff",
                 },
               },
             },
             xp: {
               text: {
                 style: {
-                  color: "#AFAACA",
+                  color: "#ead2ffff",
                 },
               },
             },
             rank: {
               text: {
                 style: {
-                  color: "#AFAACA",
+                  color: "#ead2ffff",
                 },
               },
             },

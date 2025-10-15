@@ -3,7 +3,7 @@ import { connectDB } from '../modules/db.js';
 export default {
   name: 'ready',
   handler: async (client) => {
-    console.dir(client, { depth: null, colors: true });
+    // console.dir(client, { depth: null, colors: true });
     try {
       if (!process.env.MONGO_URI) {
         console.error('❌ MONGO_URI environment variable is not set');
