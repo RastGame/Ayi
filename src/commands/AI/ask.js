@@ -2,12 +2,17 @@ import OpenAI from 'openai';
 import dotenv from 'dotenv';
 dotenv.config();
 
+// Store conversation history per dialog
+const dialogHistory = new Map();
+
 const groq = new OpenAI({
   baseURL: "https://api.groq.com/openai/v1",
   apiKey: process.env.GROQ_TOKEN,
 });
 
-async function main(prompt, imageUrl = null) {
+async function main(prompt, dialogId) {
+  const history = dialogHistory.get(dialogId) || [];
+  
   const messages = [
     {
       role: "system",
@@ -20,28 +25,19 @@ RULES:
 4. For other questions, give precise, factual answers
 5. If you don't know something, say "I do not have access to that information."
 6. Never introduce yourself unless specifically asked "who are you" or similar questions
-7. ALWAYS use formatting: [text](url) for links, **text** for bold, *text* for italic, ^^^text^^^ for quotes. Make responses visually appealing with proper formatting`
-    }
+7. formatting: [text](url) for links, **text** for bold, *text* for italic, ^^^text^^^ for quotes.`
+    },
+    ...history,
+    { role: "user", content: prompt }
   ];
-
-  
-  const content = [{ type: "text", text: prompt }];
-  
-  if (imageUrl) {
-    content.push({
-      type: "image_url",
-      image_url: { url: imageUrl }
-    });
-  }
-  
-  messages.push({ role: "user", content });
 
   const completion = await groq.chat.completions.create({
     model: "qwen/qwen3-32b", 
     messages
   });
 
-  return completion.choices[0].message.content;
+  const response = completion.choices[0].message.content;
+  return response;
 }
 
 
@@ -54,18 +50,28 @@ export default {
         client.typing(message.Dialog.ID);
 
         let prompt = args.prompt;
-        let imageUrl = null;
-        
-        if (message.Photos && message.Photos.length > 0) {
-          imageUrl = `https://cdn.yurba.one/photos/${message.Photos[0]}.jpg`;
-        }
 
         if (!prompt) {
           return await message.reply('Please provide a prompt. Usage: !ask <your question>');
         }
         
         console.log('Prompt:', prompt);
-        let response = await main(prompt, imageUrl);
+        let response = await main(prompt, message.Dialog.ID);
+        
+        // Store conversation history
+        const history = dialogHistory.get(message.Dialog.ID) || [];
+        console.log(history)
+        history.push({ role: "user", content: prompt });
+        history.push({ role: "assistant", content: response });
+        
+
+
+        // Keep only last 10 messages (5 exchanges)
+        if (history.length > 10) {
+          history.splice(0, history.length - 10);
+        }
+        
+        dialogHistory.set(message.Dialog.ID, history);
         
         // Remove <think> tags and content
         response = response.replace(/<think>.*?<\/think>/gs, '').trim();
@@ -73,7 +79,7 @@ export default {
         await message.reply(`${response}`);
     } catch (error) {
       if (error.status === 429) {
-        await message.reply('Ліміт.');
+        await message.reply('Ліміт запітів, спробуйте пізнише.');
       } else {
         await message.reply('An error occurred while processing your request.');
       }

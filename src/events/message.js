@@ -1,12 +1,16 @@
 import { User } from '../models/User.js';
 import { Profile } from '../models/Profile.js';
 import { Dialog } from '../models/Dialog.js';
+import { Mute } from '../models/Mute.js';
 
 export default {
   name: 'message',
   handler: async (client, message) => {
     try {
       if (!message.Author?.ID) return;
+      
+      // Перевірка на мут
+
       
       console.log(JSON.stringify(message, null, 2))
 
@@ -17,6 +21,11 @@ export default {
       }
 
       if (message.Dialog.Type === 'group') {
+
+        const mute = await Mute.findActive(message.Dialog.ID, message.Author.ID);
+        if (mute) {
+          return message.reply('🔇 Ти в муті');
+        }
         // логіка на додавання користувача в базу якщо немає (Users)
                 // логіка на додвання діалогу в базу (Dialogs)
         let dialog = await Dialog.findById(message.Dialog.ID);
