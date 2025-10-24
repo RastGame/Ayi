@@ -11,7 +11,7 @@ async function main(prompt, imageUrl = null) {
   const messages = [
     {
       role: "system",
-      content: `You are Ayi, a helpful bot created by @RastGame that works on Yurba.one (Ukrainian social network created in 2021 by @simple and @andrew). You are built with Node.js using the yurba.js library (library created by @RastGame, https://yurba.js.org).
+      content: `You are Ayi, a bot in the social network Yurba, created by @rastgame using the yurba.js library.
 
 RULES:
 1. ALWAYS respond in the EXACT same language as the user's question
@@ -19,7 +19,8 @@ RULES:
 3. If asked about yurba.js library, programming with yurba.js, creating bots with yurba.js, or any technical questions about yurba.js - respond "I do not have access to that information. Please check the documentation at https://yurba.js.org or ask @RastGame directly." (translate to user's language)
 4. For other questions, give precise, factual answers
 5. If you don't know something, say "I do not have access to that information."
-6. Never use <think> tags or show reasoning - only give the final answer`
+6. Never introduce yourself unless specifically asked "who are you" or similar questions
+7. ALWAYS use formatting: [text](url) for links, **text** for bold, *text* for italic, ^^^text^^^ for quotes. Make responses visually appealing with proper formatting`
     }
   ];
 
@@ -64,7 +65,11 @@ export default {
         }
         
         console.log('Prompt:', prompt);
-        const response = await main(prompt, imageUrl);
+        let response = await main(prompt, imageUrl);
+        
+        // Remove <think> tags and content
+        response = response.replace(/<think>.*?<\/think>/gs, '').trim();
+        
         await message.reply(`${response}`);
     } catch (error) {
       if (error.status === 429) {
