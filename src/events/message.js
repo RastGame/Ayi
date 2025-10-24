@@ -11,8 +11,8 @@ export default {
     try {
       if (!message.Author?.ID) return;
       
-      // Перевірка на мут
-
+      // Ігноруємо повідомлення про видалення
+      if (message.Type === 'message_delete') return;
       
       console.log(JSON.stringify(message, null, 2))
 
@@ -44,12 +44,12 @@ export default {
             
             // Видалити повідомлення через API
             try {
-              const api = new REST(dialog.token);
-              console.log(api)
+              console.log("BOT: START DELETING MESSAGE: ", message.ID)
+              const api = new REST(dialog.token, {debug:true});
               const result = await api.dialogs.deleteMessage(message.ID);
-              console.log('Result: ', result);
+              console.log('BOT: WHAT RETURNS DELETE: ', result, ' || MESSAGE-ID: ', message.ID);
             } catch (error) {
-              console.error('Moderation error:', error);
+              console.error('BOT: ERROR IN try/catch :', error);
             }
             return;
           }

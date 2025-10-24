@@ -1,4 +1,5 @@
 import pkg from '../../../package.json' with { type: 'json' };
+import { Version } from 'yurba.js';
 
 const clockIcons = [
   ':clock12:', ':clock1230:',
@@ -69,7 +70,7 @@ export default {
       `₊ ${clockIcon} ⊹ У мережі: *${relativeTime}*`,
       ``,
       `• Node.js: ${process.version}`,
-      `• Yurba.js: v${pkg.dependencies?.['yurba.js'] || 'N/A'}`,
+      `• Yurba.js: v${Version || 'N/A'}`,
       `╰───────────────────────────────╯`,
     ].join('\n');
 
