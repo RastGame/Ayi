@@ -2,6 +2,8 @@ import { User } from '../models/User.js';
 import { Profile } from '../models/Profile.js';
 import { Dialog } from '../models/Dialog.js';
 import { Mute } from '../models/Mute.js';
+import { REST } from '@yurbajs/rest';
+
 
 export default {
   name: 'message',
@@ -21,16 +23,36 @@ export default {
       }
 
       if (message.Dialog.Type === 'group') {
-
-        const mute = await Mute.findActive(message.Dialog.ID, message.Author.ID);
-        if (mute) {
-          return message.reply('🔇 Ти в муті');
-        }
         // логіка на додавання користувача в базу якщо немає (Users)
                 // логіка на додвання діалогу в базу (Dialogs)
         let dialog = await Dialog.findById(message.Dialog.ID);
         if (!dialog) {
-          return dialog = await Dialog.create(message.Dialog.ID);
+          dialog = await Dialog.create(message.Dialog.ID);
+        }
+
+        // Перевірка на мут тільки якщо модерація увімкнена
+        if (dialog.moderation) {
+          const mute = await Mute.findActive(message.Dialog.ID, message.Author.ID);
+          if (mute) {
+            if (!dialog.token) {
+              // Повідомити власника про необхідність встановити токен
+              if (message.Dialog.Owner?.ID) {
+                // Тут можна додати логіку повідомлення власника
+              }
+              return message.reply('🔇 Ти в муті');
+            }
+            
+            // Видалити повідомлення через API
+            try {
+              const api = new REST(dialog.token);
+              console.log(api)
+              const result = await api.dialogs.deleteMessage(message.ID);
+              console.log('Result: ', result);
+            } catch (error) {
+              console.error('Moderation error:', error);
+            }
+            return;
+          }
         }
         let user = await User.findByDialogAndUser(message.Dialog.ID, message.Author.ID);
         if (!user) {

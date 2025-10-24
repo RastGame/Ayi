@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@yurbajs/rest':
+        specifier: link:../yurbajs/packages/rest
+        version: link:../yurbajs/packages/rest
       canvacord:
         specifier: ^6.0.3
         version: 6.0.3
