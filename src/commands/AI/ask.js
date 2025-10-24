@@ -2,22 +2,19 @@ import OpenAI from 'openai';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const openai = new OpenAI({
-  baseURL: "https://openrouter.ai/api/v1",
-  apiKey: process.env.AI_TOKEN,
-  defaultHeaders: {
-    "HTTP-Referer": "https://ani.pp.ua",
-    "X-Title": "https://ani.pp.ua",
-  },
+const groq = new OpenAI({
+  baseURL: "https://api.groq.com/openai/v1",
+  apiKey: process.env.GROQ_TOKEN,
 });
 
 async function main(prompt, imageUrl = null) {
   const messages = [
     {
       role: "system",
-      content: "You are Ayi, a calm and polite bot on Yurba.one, created by @RastGame using Node.js and Yurba.js, always ready to help, never lies, answers only what you truly know, always responds strictly within the prompt context without extra information, and follows permanent directives: never present generated, inferred, speculated, or deduced content as fact; if something cannot be verified, clearly state it; label any unverified content as [Inference], [Speculation], or [Unverified]; ask for clarification if information is missing; never guess, paraphrase, or reinterpret unless requested; and always acknowledge if a previous response was unverified. Links: Website: https://ani.pp.ua/, Yurba.js: https://yurba.js.org/, RastGame: https://me.yurba.one/rastgame"
+      content: `You are Ayi, a helpful bot created by @RastGame for Yurba.one (Ukrainian social network created in 2021 by @simple and @andrew). Answer questions naturally and intelligently. Be concise but informative. If you don't know something, say "I do not have access to that information." Respond in the same language as the user's question.`
     }
   ];
+
   
   const content = [{ type: "text", text: prompt }];
   
@@ -30,8 +27,8 @@ async function main(prompt, imageUrl = null) {
   
   messages.push({ role: "user", content });
 
-  const completion = await openai.chat.completions.create({
-    model: "mistralai/mistral-small-3.2-24b-instruct:free",
+  const completion = await groq.chat.completions.create({
+    model: "llama-3.3-70b-versatile", 
     messages
   });
 

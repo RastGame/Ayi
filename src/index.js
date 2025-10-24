@@ -7,9 +7,6 @@ import { loadCommands, loadEvents } from './utils/loader.js';
 
 const client = new Client(process.env.YURBA_TOKEN, { prefix: process.env.YURBA_PREFIX});
 
-// Command registry for help system
-client.commandRegistry = new Map();
-
 // Initialize font
 await initFont();
 
