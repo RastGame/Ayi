@@ -2,7 +2,7 @@ import { Welcomer } from '../../models/Welcomer.js';
 
 export default {
   name: 'goodbye',
-  args: { text: { type: 'string', required: false } },
+  args: { text: { type: 'string', rest: true, required: false } },
   handler: async (client, message, args) => {
     try {
       if (message.Dialog.Type !== 'group') {

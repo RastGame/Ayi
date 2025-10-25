@@ -1,8 +1,9 @@
 import { Welcomer } from '../../models/Welcomer.js';
+import { replacePlaceholders } from '../../utils/placeholders.js';
 
 export default {
   name: 'welcome',
-  args: { text: { type: 'string', required: false } },
+  args: { text: { type: 'string', rest: true ,required: false} },
   handler: async (client, message, args) => {
     try {
       if (message.Dialog.Type !== 'group') {
@@ -25,7 +26,9 @@ export default {
       }
 
       await Welcomer.setWelcome(message.Dialog.ID, welcomer.welcome?.enabled || false, args.text);
-      return message.reply('✅ Текст привітання оновлено!');
+
+      const response = replacePlaceholders(args.text, message);
+      return message.reply(`✅ Текст привітання оновлено! \n ${response}`);
     } catch (error) {
       console.error('Welcome text error:', error);
       message.reply('❌ Помилка при встановленні тексту привітання');
