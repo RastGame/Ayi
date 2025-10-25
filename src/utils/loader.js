@@ -3,6 +3,25 @@ import { join, resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const cooldowns = new Map();
+
+function checkCooldown(command, userId) {
+  const key = `${command}_${userId}`;
+  const now = Date.now();
+  if (cooldowns.has(key)) {
+    const expirationTime = cooldowns.get(key);
+    if (now < expirationTime) {
+      return expirationTime - now;
+    }
+    cooldowns.delete(key);
+  }
+  return 0;
+}
+
+function setCooldown(command, userId, ms) {
+  const key = `${command}_${userId}`;
+  cooldowns.set(key, Date.now() + ms);
+}
 
 async function loadFiles(dir, handler) {
   try {
@@ -33,7 +52,23 @@ export async function loadCommands(client, path = '../commands') {
       console.error(`〢 [✘] Invalid command in { ${file} }`);
       return;
     }
-    client.registerCommand(cmd.name, cmd.args || {}, (message, args) => cmd.handler(client, message, args));
+    const handler = async (message, args) => {
+      // Перевірка та встановлення cooldown
+      if (cmd.cooldown) {
+        const cooldownTime = checkCooldown(cmd.name, message.Author.ID);
+        if (cooldownTime > 0) {
+          const secondsLeft = Math.ceil(cooldownTime / 1000);
+          return message.reply(`⏰ Зачекайте ${secondsLeft} секунд`);
+        }
+        // Встановлюємо cooldown одразу
+        setCooldown(cmd.name, message.Author.ID, cmd.cooldown);
+      }
+      
+      // Виконання команди
+      await cmd.handler(client, message, args);
+    };
+    
+    client.registerCommand(cmd.name, cmd.args || {}, handler);
     console.log(`[✅] Command: < ${client.prefix}${cmd.name} >`);
   });
 }

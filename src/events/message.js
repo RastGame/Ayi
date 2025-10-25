@@ -13,8 +13,6 @@ export default {
       
       // Ігноруємо повідомлення про видалення
       if (message.Type === 'message_delete') return;
-      
-      console.log(JSON.stringify(message, null, 2))
 
       // логіка на додавання користувача в базу якщо немає (Profiles)
       let profile = await Profile.findById(message.Author.ID);

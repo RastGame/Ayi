@@ -1,5 +1,6 @@
 import pkg from '../../../package.json' with { type: 'json' };
 import { Version } from 'yurba.js';
+import { getDB } from '../../modules/db.js';
 
 const clockIcons = [
   ':clock12:', ':clock1230:',
@@ -20,7 +21,7 @@ const clockIcons = [
 function getClockIcon(uptimeSeconds) {
   const totalMinutes = Math.floor(uptimeSeconds / 60);
   const iconIndex = Math.floor((totalMinutes % (24 * 60)) / 30);
-  return clockIcons[iconIndex];
+  return clockIcons[iconIndex] || clockIcons[0];
 }
 
 // перетворює uptime у стиль "2 години", "1 день", "5 днів", "тиждень"
@@ -59,6 +60,10 @@ export default {
     const uptime = process.uptime();
     const commandsCount = client.getCommands?.().length || 0;
 
+    const db = getDB();
+    const usersCount = await db.collection('profiles').countDocuments();
+    const dialogsCount = await db.collection('dialogs').countDocuments();
+
     const clockIcon = getClockIcon(uptime);
     const relativeTime = formatRelativeTime(uptime);
 
@@ -67,6 +72,8 @@ export default {
       `╭───────────────────────────────╮`,
       `₊ :pigeon: ⊹ Розробник: @${pkg.author}`,
       `₊ :game_die: ⊹ Команд: *${commandsCount}*`,
+      `₊ :busts_in_silhouette: ⊹ Користувачів: *${usersCount}*`,
+      `₊ :speech_balloon: ⊹ Діалогів: *${dialogsCount}*`,
       `₊ ${clockIcon} ⊹ У мережі: *${relativeTime}*`,
       ``,
       `• Node.js: ${process.version}`,
