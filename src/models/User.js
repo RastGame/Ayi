@@ -49,4 +49,19 @@ export class User {
   static async setPermissions(dialogId, userId, permissions) {
     return await this.updateByDialogAndUser(dialogId, userId, { permissions });
   }
+
+  static async deleteByDialogAndUser(dialogId, userId) {
+    const db = getDB();
+    return await db.collection('users').deleteOne({
+      '_id.dialog': dialogId,
+      '_id.id': userId
+    });
+  }
+
+  static async deleteAllByDialog(dialogId) {
+    const db = getDB();
+    return await db.collection('users').deleteMany({
+      '_id.dialog': dialogId
+    });
+  }
 }

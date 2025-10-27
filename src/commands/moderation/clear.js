@@ -4,7 +4,7 @@ import { Dialog } from '../../models/Dialog.js';
 export default {
   name: 'clear',
   args: {count: 'int'},
-  cooldown: 30000,
+  cooldown: 10000,
   handler: async (client, message, args) => {
     try {
       if (message.Dialog.Type !== 'group') {
@@ -28,8 +28,8 @@ export default {
 
       
       const api = new REST(dialog.token, { debug:true });
-
-      await message.reply("Видалення... \n- Статус «пише» означає що бот зараз видаляє")
+      
+      const msgdeleting = await message.reply("Видалення... \n- Статус «пише» означає що бот зараз видаляє")
 
       
       let allMessages = [];
@@ -68,10 +68,14 @@ export default {
         deletedCount += results.filter(r => r.success).length;
         failedCount += results.filter(r => !r.success).length;
       }
-      
+      await api.dialogs.deleteMessage(msgdeleting.ID);
       console.log(`Deleted: ${deletedCount}, Failed: ${failedCount}`);
       
-      return message.reply(`🗑️ Видалено ${deletedCount} повідомлень`);
+      const msgsucs = await message.reply(`🗑️ Видалено ${deletedCount} повідомлень (видалення за 3 секунди..)`);
+      setTimeout(async ()  => {
+        await api.dialogs.deleteMessage(message.ID);
+        await api.dialogs.deleteMessage(msgsucs.ID);
+      }, 3000);
 
     } catch (error) {
       console.error('Clear error:', error);

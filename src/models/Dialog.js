@@ -39,4 +39,9 @@ export class Dialog {
   static async setEconomy(dialogId, enabled) {
     return await this.updateById(dialogId, { economy: enabled });
   }
+
+  static async deleteById(dialogId) {
+    const db = getDB();
+    return await db.collection('dialogs').deleteOne({ _id: dialogId });
+  }
 }

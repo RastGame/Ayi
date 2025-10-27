@@ -45,4 +45,9 @@ export class Welcomer {
       'goodbye.media': media
     });
   }
+
+  static async deleteById(dialogId) {
+    const db = getDB();
+    return await db.collection('welcomers').deleteOne({ _id: dialogId });
+  }
 }
