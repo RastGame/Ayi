@@ -4,19 +4,23 @@
     "commands": {
       "info": {
         "description": "Інформація про мене",
-        "usage": "info"
+        "usage": "info",
+        "example": "info"
       },
       "help": {
         "description": "Список усіх команд",
-        "usage": "help"
+        "usage": "help (category/command)",
+        "example": "help Модерація"
       },
       "profile": {
         "description": "Переглянути профіль користувача",
-        "usage": "profile (user)"
+        "usage": "profile (user)",
+        "example": "profile @rastgame"
       },
       "card": {
         "description": "Створити карточку привітання",
-        "usage": "card"
+        "usage": "card",
+        "example": "card"
       }
     }
   },
@@ -25,11 +29,13 @@
     "commands": {
       "user": {
         "description": "Інформація про користувача",
-        "usage": "user (user)"
+        "usage": "user (user)",
+        "example": "user @rastgame"
       },
       "addbot": {
         "description": "Додати бота до групи",
-        "usage": "addbot [dialog.id]"
+        "usage": "addbot [dialog.id]",
+        "example": "addbot 123"
       }
     }
   },
@@ -38,19 +44,23 @@
     "commands": {
       "kick": {
         "description": "Видалити користувача з групи",
-        "usage": "kick [user]"
+        "usage": "kick [user]",
+        "example": "kick @rastgame"
       },
       "kickunactive": {
         "description": "Видалити неактивних користувачів",
-        "usage": "kickunactive [час]"
+        "usage": "kickunactive [час]",
+        "example": "kickunactive 7d"
       },
       "mute": {
         "description": "Замутити користувача",
-        "usage": "mute [user] [час] (причина)"
+        "usage": "mute [user] [час] (причина)",
+        "example": "mute @rastgame 60 спам"
       },
       "clear": {
         "description": "Очистити повідомлення",
-        "usage": "clear [кількість]"
+        "usage": "clear [кількість]",
+        "example": "clear 10"
       }
     }
   },
@@ -59,15 +69,18 @@
     "commands": {
       "settings": {
         "description": "Налаштування групи",
-        "usage": "settings [show|set|token] [true|false]"
+        "usage": "settings [show|set|token]",
+        "example": "settings show"
       },
       "welcome": {
         "description": "Налаштування привітання",
-        "usage": "welcome (текст)"
+        "usage": "welcome (текст)",
+        "example": "welcome Привіт {user}!"
       },
       "goodbye": {
         "description": "Налаштування прощавання",
-        "usage": "goodbye (текст)"
+        "usage": "goodbye (текст)",
+        "example": "goodbye До побачення {user}!"
       }
     }
   },
@@ -76,7 +89,8 @@
     "commands": {
       "ask": {
         "description": "Поставити запитання штучному інтелекту",
-        "usage": "ask [промт]"
+        "usage": "ask [промт]",
+        "example": "ask Як справи?"
       }
     }
   },
@@ -85,7 +99,8 @@
     "commands": {
       "rank": {
         "description": "Картка рівня користувача",
-        "usage": "rank (user)"
+        "usage": "rank (user)",
+        "example": "rank @rastgame"
       }
     }
   }
