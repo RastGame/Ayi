@@ -13,6 +13,10 @@
       "profile": {
         "description": "Переглянути профіль користувача",
         "usage": "profile (user)"
+      },
+      "card": {
+        "description": "Створити карточку привітання",
+        "usage": "card"
       }
     }
   },
@@ -26,6 +30,44 @@
       "addbot": {
         "description": "Додати бота до групи",
         "usage": "addbot [dialog.id]"
+      }
+    }
+  },
+  "Модерація": {
+    "emoji": ":shield:",
+    "commands": {
+      "kick": {
+        "description": "Видалити користувача з групи",
+        "usage": "kick [user]"
+      },
+      "kickunactive": {
+        "description": "Видалити неактивних користувачів",
+        "usage": "kickunactive [час]"
+      },
+      "mute": {
+        "description": "Замутити користувача",
+        "usage": "mute [user] [час] (причина)"
+      },
+      "clear": {
+        "description": "Очистити повідомлення",
+        "usage": "clear [кількість]"
+      }
+    }
+  },
+  "Адміністрація": {
+    "emoji": ":gear:",
+    "commands": {
+      "settings": {
+        "description": "Налаштування групи",
+        "usage": "settings [show|set|token] [true|false]"
+      },
+      "welcome": {
+        "description": "Налаштування привітання",
+        "usage": "welcome (текст)"
+      },
+      "goodbye": {
+        "description": "Налаштування прощавання",
+        "usage": "goodbye (текст)"
       }
     }
   },
