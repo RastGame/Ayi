@@ -1,6 +1,7 @@
 {
   "Інформація": {
     "emoji": ":mag_right:",
+    "aliases": ["info", "information"],
     "commands": {
       "info": {
         "description": "Інформація про мене",
@@ -26,31 +27,40 @@
   },
   "Утиліти": {
     "emoji": ":hammer_and_wrench:",
+    "aliases": ["utility", "utils"],
     "commands": {
       "user": {
         "description": "Інформація про користувача",
         "usage": "user (user)",
         "example": "user @rastgame"
       },
-      "addbot": {
+      "invite": {
         "description": "Додати бота до групи",
-        "usage": "addbot [dialog.id]",
-        "example": "addbot 123"
+        "usage": "invite [dialog.id]",
+        "example": "invite 123"
+      }, 
+      "leave": {
+        "description": "Видалити бота з групи",
+        "usage": "leave",
+        "example": "leave"
       }
     }
   },
   "Модерація": {
     "emoji": ":shield:",
+    "aliases": ["moderation", "mod"],
     "commands": {
       "kick": {
         "description": "Видалити користувача з групи",
         "usage": "kick [user]",
-        "example": "kick @rastgame"
+        "example": ["kick @rastgame", "kick 123"],
+        "info": "Тільки власник групи може використовувати цю команду"
       },
       "kickunactive": {
         "description": "Видалити неактивних користувачів",
         "usage": "kickunactive [час]",
-        "example": "kickunactive 7d"
+        "example": ["kickunactive 7d", "kickunactive 1m", "kickunactive 30d"],
+        "info": "Формат часу: h (години), d (дні), m (місяці), y (роки)"
       },
       "mute": {
         "description": "Замутити користувача",
@@ -60,12 +70,14 @@
       "clear": {
         "description": "Очистити повідомлення",
         "usage": "clear [кількість]",
-        "example": "clear 10"
+        "example": ["clear 10", "clear 25"],
+        "info": "Максимум 40 повідомлень за раз"
       }
     }
   },
   "Адміністрація": {
     "emoji": ":gear:",
+    "aliases": ["admin", "administration"],
     "commands": {
       "settings": {
         "description": "Налаштування групи",
@@ -86,6 +98,7 @@
   },
   "ШІ": {
     "emoji": ":dizzy:",
+    "aliases": ["ai", "artificial"],
     "commands": {
       "ask": {
         "description": "Поставити запитання штучному інтелекту",
@@ -96,6 +109,7 @@
   },
   "Рівні": {
     "emoji": ":zap:",
+    "aliases": ["levels", "level"],
     "commands": {
       "rank": {
         "description": "Картка рівня користувача",

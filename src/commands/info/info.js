@@ -69,16 +69,16 @@ export default {
 
     const infoText = [
       `:flower: **Ayi\`v${pkg.version}\`**`,
-      `╭───────────────────────────────╮`,
+      `╭──────────────────────────────╮`,
       `₊ :pigeon: ⊹ Розробник: @${pkg.author}`,
       `₊ :game_die: ⊹ Команд: *${commandsCount}*`,
       `₊ :busts_in_silhouette: ⊹ Користувачів: *${usersCount}*`,
       `₊ :speech_balloon: ⊹ Діалогів: *${dialogsCount}*`,
       `₊ ${clockIcon} ⊹ У мережі: *${relativeTime}*`,
       ``,
-      `• Node.js: ${process.version}`,
-      `• Yurba.js: v${Version || 'N/A'}`,
-      `╰───────────────────────────────╯`,
+      `〜 Node.js: ${process.version}`,
+      `〜 Yurba.js: v${Version || 'N/A'}`,
+      `╰──────────────────────────────╯`,
     ].join('\n');
 
     await message.reply(infoText);

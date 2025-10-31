@@ -3,7 +3,7 @@ import { Dialog } from '../../models/Dialog.js';
 
 export default {
   name: 'clear',
-  args: {count: 'int'},
+  args: {count: 'int', user: {type: 'user', required: false}},
   cooldown: 10000,
   handler: async (client, message, args) => {
     try {
@@ -11,7 +11,7 @@ export default {
         return message.reply('❌ Команда доступна тільки в групах!');
       }
 
-      const { count } = args;
+      const { count, user } = args;
       if (count < 1 || count > 40) {
         return message.reply('❌ Кількість повідомлень має бути від 1 до 40');
       }
@@ -29,14 +29,16 @@ export default {
       
       const api = new REST(dialog.token, { debug:true });
       
-      const msgdeleting = await message.reply("Видалення... \n- Статус «пише» означає що бот зараз видаляє")
+      const userText = user ? ` користувача @${user.Link} (${user.ID})` : '';
+
+      const msgdeleting = await message.reply(`🪄`)
 
       
       let allMessages = [];
       let lastId = message.ID;
       
       // Отримуємо повідомлення порціями по 20
-      while (allMessages.length < count) {
+      while (allMessages.length < (user ? count * 3 : count)) {
         const messages = await api.dialogs.getMessages(message.Dialog.ID, lastId);
         if (!messages.length) break;
         
@@ -44,8 +46,13 @@ export default {
         lastId = messages[messages.length - 1].ID;
       }
       
-      const messagesToDelete = allMessages.slice(0, count);
-      console.log(`Found ${allMessages.length} messages, will delete ${messagesToDelete.length}`);
+      let messagesToDelete = user ? 
+        allMessages.filter(msg => msg.Author.ID === user.ID).slice(0, count) :
+        allMessages.slice(0, count);
+      if (messagesToDelete.length === 0) {
+        await api.dialogs.deleteMessage(msgdeleting.ID);
+        return message.reply(`📭 Не знайдено повідомлень${userText} для видалення`);
+      }
       
       let deletedCount = 0;
       let failedCount = 0;
@@ -71,7 +78,7 @@ export default {
       await api.dialogs.deleteMessage(msgdeleting.ID);
       console.log(`Deleted: ${deletedCount}, Failed: ${failedCount}`);
       
-      const msgsucs = await message.reply(`🗑️ Видалено ${deletedCount} повідомлень (видалення за 3 секунди..)`);
+      const msgsucs = await message.reply(`﹒🗑️イ  Видалено ꔠ\`${deletedCount}/${args.count}\` повідомлень${userText} ||(видалення за 3 секунди..)||`);
       setTimeout(async ()  => {
         await api.dialogs.deleteMessage(message.ID);
         await api.dialogs.deleteMessage(msgsucs.ID);

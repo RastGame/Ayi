@@ -15,36 +15,57 @@ export default {
         if (categoryData.commands[args.query]) {
           const cmd = categoryData.commands[args.query];
           const helpText = [
-            `📖 **Команда: \`${args.query}\`**`,
-            `╭───────────────────────────────╮`,
-            `**${cmd.description}**`,
-            ``,
-            `📝 **Використання:**`,
-            `  ⤷ \`${prefix}${cmd.usage}\``,
-            ``,
-            `💡 **Приклад:**`,
-            `  ⤷ \`${prefix}${cmd.example}\``,
-            `╰───────────────────────────────╯`
+            `:game_die: **${cmd.description}****`,
+            `╭──────────────────────────────╮`,
+            `ᯓ \`${prefix}${cmd.usage}\``,
+            `\n **${cmd.info || ''}**`
           ];
+          
+          const examples = Array.isArray(cmd.example) ? cmd.example : [cmd.example];
+          helpText.push(`﹒💡イ **Приклади:**`);
+          examples.forEach(example => {
+            helpText.push(`  ⤷ \`${prefix}${example}\``);
+          });
+          
+          helpText.push(`╰──────────────────────────────╯`, `\n⌞\`() - не обов'язковий аргумент\`⌝\n⌞\`[] - обов'язковий аргумент\`⌝`);
           return message.reply(helpText.join('\n'));
         }
       }
       
       // Пошук категорії
+      let foundCategory = null;
+      let foundCategoryName = null;
+      
+      // Прямий пошук по назві
       if (commandsData[args.query]) {
-        const categoryData = commandsData[args.query];
+        foundCategory = commandsData[args.query];
+        foundCategoryName = args.query;
+      } else {
+        // Пошук по аліасам
+        for (const [categoryName, categoryData] of Object.entries(commandsData)) {
+          if (categoryData.aliases && categoryData.aliases.includes(args.query.toLowerCase())) {
+            foundCategory = categoryData;
+            foundCategoryName = categoryName;
+            break;
+          }
+        }
+      }
+      
+      if (foundCategory) {
         const helpText = [
-          `${categoryData.emoji} **Категорія: ${args.query}**`,
-          '╭───────────────────────────────╮'
+          `${foundCategory.emoji} **Категорія: ${foundCategoryName}**`,
+          '╭──────────────────────────────╮'
         ];
         
-        for (const [commandName, commandData] of Object.entries(categoryData.commands)) {
+        for (const [commandName, commandData] of Object.entries(foundCategory.commands)) {
           helpText.push(`\n**${commandData.description}**`);
           helpText.push(`  ⤷ \`${prefix}${commandData.usage}\``);
-          helpText.push(`  💡 \`${prefix}${commandData.example}\``);
+          const firstExample = Array.isArray(commandData.example) ? commandData.example[0] : commandData.example;
+          helpText.push(`  💡 \`${prefix}${firstExample}\``);
         }
         
-        helpText.push('\n╰───────────────────────────────╯');
+        helpText.push('\n╰──────────────────────────────╯');
+        helpText.push('\n ⌞\`() - не обов\'язковий аргумент\`⌝\n⌞\`[] - обов\'язковий аргумент\`⌝');
         return message.reply(helpText.join('\n'));
       }
       
@@ -59,20 +80,19 @@ export default {
     
     const helpText = [
       `:game_die: **Доступні команди \`${commandsCount}\`**`,
-      '╭───────────────────────────────╮'
+      '╭──────────────────────────────╮'
     ];
     
     for (const [categoryName, categoryData] of Object.entries(commandsData)) {
       const commands = Object.keys(categoryData.commands).map(cmd => `\`${prefix}${cmd}\``).join(', ');
-      helpText.push(`\n₊ ${categoryData.emoji} ⊹ **${categoryName}**`);
+      const commandCount = Object.keys(categoryData.commands).length;
+      helpText.push(`\n₊ ${categoryData.emoji} ⊹ **${categoryName}** (${commandCount})`);
       helpText.push(`${commands}`);
     } 
     
-    helpText.push('\n╰───────────────────────────────╯');
-    helpText.push(`⤷ \`${prefix}help [категорія]\` - команди категорії`);
-    helpText.push(`⤷ \`${prefix}help [команда]\` - детально про команду`);
-    helpText.push('\n⌞\`() - не обов\'язковий аргумент\`⌝\n⌞\`[] - обов\'язковий аргумент\`⌝');
+    helpText.push('\n╰──────────────────────────────╯');
+    helpText.push(`⤷ \`${prefix}help [категорія/команда]\``);
     
     await message.reply(helpText.join('\n'));
   }
-}; 
+};
