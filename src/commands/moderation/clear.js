@@ -8,28 +8,29 @@ export default {
   handler: async (client, message, args) => {
     try {
       if (message.Dialog.Type !== 'group') {
-        return message.reply('❌ Команда доступна тільки в групах!');
+        return message.reply('﹒:x:イ Команда доступна **тільки в групах!**');
       }
 
       const { count, user } = args;
       if (count < 1 || count > 40) {
-        return message.reply('❌ Кількість повідомлень має бути від 1 до 40');
+        return message.reply('﹒:double-exclamation:イ Кількість повідомлень має бути **від 1 до 40**');
       }
 
 
       if (message.Author.ID !== message.Dialog.Owner?.ID && message.Author.ID !== 1111) {
-        return message.reply('❌ Тільки власник діалогу може !');
+        return message.reply('﹒:x:イ Недостатньо прав!');
       }
 
       const dialog = await Dialog.findById(message.Dialog.ID);
       if (!dialog || !dialog.token) {
-        return message.reply('❌ Токен не встановлено для цього діалогу');
+        return message.reply(`﹒:x:イ **Токен не встановлений** для цього діалогу\n⤷ \`${client.prefix}help token\``);
       }
 
       
-      const api = new REST(dialog.token, { debug:true });
-      
-      const userText = user ? ` користувача @${user.Link} (${user.ID})` : '';
+      const api = new REST(dialog.token);
+    
+
+      const userText = user ? ` користувача @${user.Link}` : '';
 
       const msgdeleting = await message.reply(`🪄`)
 
@@ -51,30 +52,30 @@ export default {
         allMessages.slice(0, count);
       if (messagesToDelete.length === 0) {
         await api.dialogs.deleteMessage(msgdeleting.ID);
-        return message.reply(`📭 Не знайдено повідомлень${userText} для видалення`);
+        return message.reply(`﹒:monokle:イ Не знайдено повідомлень${userText} для видалення`);
       }
       
       let deletedCount = 0;
       let failedCount = 0;
       
-      // Паралельне видалення по 5 одночасно
-      for (let i = 0; i < messagesToDelete.length; i += 5) {
-        const batch = messagesToDelete.slice(i, i + 5);
-        const deletePromises = batch.map(async (msg) => {
-          try {
-            client.typing(message.Dialog.ID);
-            await api.dialogs.deleteMessage(msg.ID);
-            return { success: true, id: msg.ID };
-          } catch (error) {
-            console.log(`Failed to delete message ${msg.ID}:`, error.message);
-            return { success: false, id: msg.ID };
-          }
-        });
-        
-        const results = await Promise.all(deletePromises);
-        deletedCount += results.filter(r => r.success).length;
-        failedCount += results.filter(r => !r.success).length;
-      }
+      // Batch видалення - набагато швидше!
+      const batch = api.batch();
+      messagesToDelete.forEach((msg, index) => {
+        batch.add(`msg_${index}`, api.dialogs.deleteMessage(msg.ID));
+      });
+      
+      client.typing(message.Dialog.ID);
+      const results = await batch.executeSettled();
+      
+      // Підрахунок результатів
+      Object.values(results).forEach(result => {
+        if (result.error) {
+          failedCount++;
+          console.log(`Failed to delete message:`, result.error.message);
+        } else {
+          deletedCount++;
+        }
+      });
       await api.dialogs.deleteMessage(msgdeleting.ID);
       console.log(`Deleted: ${deletedCount}, Failed: ${failedCount}`);
       
