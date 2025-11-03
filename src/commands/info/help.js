@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { msg } from '../../utils/messages.js';
 
 export default {
   name: 'help',
@@ -22,7 +23,7 @@ export default {
           ];
           
           const examples = Array.isArray(cmd.example) ? cmd.example : [cmd.example];
-          helpText.push(`﹒💡イ **Приклади:**`);
+          helpText.push(msg('💡', '**Приклади:**'));
           examples.forEach(example => {
             helpText.push(`  ⤷ \`${prefix}${example}\``);
           });
