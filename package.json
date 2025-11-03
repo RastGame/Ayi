@@ -17,14 +17,14 @@
   "author": "RastGame",
   "license": "Apache-2.0",
   "dependencies": {
-    "@yurbajs/rest": "1.0.0-next.10",
-    "canvacord": "^6.0.3",
+    "@yurbajs/rest": "1.0.0-next.11",
+    "canvacord": "^6.0.4",
     "dotenv": "^17.2.3",
     "mongodb": "^6.20.0",
     "nekos-best.js": "^6.4.0",
     "nekosapi": "^0.7.0",
-    "openai": "^6.3.0",
-    "yurba.js": "1.0.0-next.10"
+    "openai": "^6.7.0",
+    "yurba.js": "1.0.0-next.11"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
