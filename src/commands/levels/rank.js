@@ -1,6 +1,7 @@
 import { RankCardBuilder } from "canvacord";
 import { User } from '../../models/User.js';
 import { Dialog } from '../../models/Dialog.js';
+import { err, msg } from '../../utils/messages.js';
 
 export default {
   name: 'rank',
@@ -11,7 +12,7 @@ export default {
 
       console.log(targetUser)
       if (message.Dialog.Type !== 'group') {
-        return message.reply('❌ Команда доступна тільки в групах!');
+        return message.reply(err('Команда доступна **тільки в групах!**'));
       }
 
       console.log(targetUser)
@@ -21,11 +22,11 @@ export default {
       let dialog = await Dialog.findById(message.Dialog.ID);
       console.log(dialog)
       if (!dialog.levels) {
-        return message.reply(':x: Рівні вимкнені');
+        return message.reply(err('Рівні вимкнені'));
       }
 
       if (!user) {
-        return message.reply(`@${targetUser.Link} користувача немає в рейтингу`);
+        return message.reply(err(`@${targetUser.Link} користувача немає в рейтингу`));
       }
 
       const level = Math.floor(user.xp / 1000) + 1;
@@ -96,7 +97,7 @@ export default {
       await message.reply(``, [photo.ID]);
     } catch (error) {
       console.error('Error in card command:', error);
-      message.reply('❌ Помилка при створенні rank карточки.');
+      message.reply(err('Помилка при створенні rank карточки.'));
     }
   }
 };

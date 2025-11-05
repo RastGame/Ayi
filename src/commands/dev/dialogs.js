@@ -1,10 +1,11 @@
 import { getDB } from '../../modules/db.js';
+import { err, msg } from '../../utils/messages.js';
 
 export default {
   name: 'dialogs',
   handler: async (client, message) => {
     if (message.Author.ID !== 1111) {
-      await message.reply('❌ Доступ заборонено');
+      await message.reply(err('Доступ заборонено'));
       return;
     }
 
@@ -14,7 +15,7 @@ export default {
 
     const allDialogs = await client.api.dialogs.getAll() || [];
     
-    let result = '📋 **Список діалогів:**\n\n';
+    let result = 'Список діалогів:\n\n';
     
     for (const dialog of allDialogs) {
       const inDB = dbDialogIds.has(dialog.ID);
@@ -26,6 +27,6 @@ export default {
       result += 'Діалогів не знайдено';
     }
 
-    await message.reply(result);
+    await message.reply(msg('📋', result));
   }
 };

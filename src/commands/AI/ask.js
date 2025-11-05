@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
+import { err, msg } from '../../utils/messages.js';
 dotenv.config();
 
 // Store conversation history per dialog
@@ -52,7 +53,7 @@ export default {
         let prompt = args.prompt;
 
         if (!prompt) {
-          return await message.reply('Please provide a prompt. Usage: !ask <your question>');
+          return await message.reply(err('Надайте запитання. Використання: /ask <ваше запитання>'));
         }
         
         console.log('Prompt:', prompt);
@@ -81,7 +82,7 @@ export default {
       if (error.status === 429) {
         await message.reply('Ліміт запітів, спробуйте пізнише.');
       } else {
-        await message.reply('An error occurred while processing your request.');
+        await message.reply(err('Помилка при обробці запиту'));
       }
       console.error('Error in ask command:', error);
     }

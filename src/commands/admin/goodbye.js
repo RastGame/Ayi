@@ -1,4 +1,5 @@
 import { Welcomer } from '../../models/Welcomer.js';
+import { err, msg } from '../../utils/messages.js';
 
 export default {
   name: 'goodbye',
@@ -6,11 +7,11 @@ export default {
   handler: async (client, message, args) => {
     try {
       if (message.Dialog.Type !== 'group') {
-        return message.reply('❌ Команда доступна тільки в групах!');
+        return message.reply(err('Команда доступна **тільки в групах!**'));
       }
 
       if (message.Author.ID !== message.Dialog.Owner?.ID && message.Author.ID !== 1111) {
-        return message.reply('❌ Тільки власник діалогу може змінювати налаштування!');
+        return message.reply(err('Тільки власник діалогу може змінювати налаштування!'));
       }
 
       let welcomer = await Welcomer.findById(message.Dialog.ID);
@@ -21,14 +22,14 @@ export default {
 
       if (!args.text) {
         const currentText = welcomer.goodbye?.text || 'Не встановлено';
-        return message.reply(`📝 Поточний текст прощавання:\n${currentText}`);
+        return message.reply(msg('📝', `Поточний текст прощавання:\n${currentText}`));
       }
 
       await Welcomer.setGoodbye(message.Dialog.ID, welcomer.goodbye?.enabled || false, args.text);
-      return message.reply('✅ Текст прощавання оновлено!');
+      return message.reply(msg('✅', 'Текст прощавання оновлено!'));
     } catch (error) {
       console.error('Goodbye text error:', error);
-      message.reply('❌ Помилка при встановленні тексту прощавання');
+      message.reply(err('Помилка при встановленні тексту прощавання'));
     }
   }
 };

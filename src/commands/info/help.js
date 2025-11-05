@@ -19,7 +19,7 @@ export default {
             `:game_die: **${cmd.description}****`,
             `╭──────────────────────────────╮`,
             `ᯓ \`${prefix}${cmd.usage}\``,
-            `\n **${cmd.info || ''}**`
+            `**${cmd.info && `\n⊹ ${cmd.info}` || ''}**`
           ];
           
           const examples = Array.isArray(cmd.example) ? cmd.example : [cmd.example];

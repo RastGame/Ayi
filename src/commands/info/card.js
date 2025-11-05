@@ -1,13 +1,19 @@
 import { GreetingsCard } from "../../modules/cards.js";
+import { err, msg } from '../../utils/messages.js';
 
 export default {
   name: 'card',
-  handler: async (client, message) => {
+  args: { user: {type: 'user', required: false} },
+  handler: async (client, message, args) => {
     try {
+      let user = args.user;
+      if (!args.user) {
+        user = message.Author;
+      }
 
       const card = new GreetingsCard()
-        .setAvatar(`https://cdn.yurba.one/photos/${message.Author.Avatar}`)
-        .setDisplayName(' ' + message.Author.Name + message.Author.Surname)
+        .setAvatar(user.Avatar === 0 ? "https://cdn.yurba.one/photos/3866.jpg?size=xlarge" : "https://cdn.yurba.one/photos/" + user.Avatar + ".jpg")
+        .setDisplayName(' ' + user.Name + user.Surname)
         .setType("Вітаємо")
         .setMessage("Карточка створена з використанням:")
         .setMessage2("canvacord + yurba.js");
@@ -15,7 +21,7 @@ export default {
       
       const photo = await client.api.photos.upload(
         imageBuffer,
-        'Ayi card for: ' + message.Author.Link + ', ' + new Date().toLocaleString(),
+        'Ayi card for: ' + user.Link + ', ' + new Date().toLocaleString(),
         'public'
       );
       
@@ -24,7 +30,7 @@ export default {
       await message.reply(``, [photo.ID]);
     } catch (error) {
       console.error('Error in card command:', error);
-      message.reply('❌ Помилка при створенні карточки.');
+      message.reply(err('Помилка при створенні карточки'));
     }
   }
 };

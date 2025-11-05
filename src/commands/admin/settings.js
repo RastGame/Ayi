@@ -1,5 +1,6 @@
 import { Dialog } from '../../models/Dialog.js';
 import { Welcomer } from '../../models/Welcomer.js';
+import { err, msg } from '../../utils/messages.js';
 
 export default {
   name: 'settings',
@@ -7,13 +8,13 @@ export default {
   handler: async (client, message, args) => {
     try {
       if (message.Dialog.Type !== 'group') {
-        return message.reply('❌ Команда доступна тільки в групах!');
+        return message.reply(err('Команда доступна **тільки в групах!**'));
       }
 
       const { action, setting, value } = args;
       const dialog = await Dialog.findById(message.Dialog.ID);
       if (!dialog) {
-        return message.reply('❌ Діалог не знайдено в базі даних');
+        return message.reply(err('Діалог не знайдено в базі даних'));
       }
 
       // Показ налаштувань
@@ -38,18 +39,18 @@ export default {
 
       // Перевірка прав власника
       if (message.Author.ID !== message.Dialog.Owner?.ID && message.Author.ID !== 1111) {
-        return message.reply('❌ Тільки власник діалогу може змінювати налаштування!');
+        return message.reply(err('Тільки власник діалогу може змінювати налаштування!'));
       }
 
       // Зміна налаштувань
       if (action === 'set') {
         if (!setting || !value) {
-          return message.reply('❌ Використання: /settings set <moderation|levels|economy> <true|false>');
+          return message.reply(err('Використання: /settings set <moderation|levels|economy> <true|false>'));
         }
         
         const validSettings = ['moderation', 'levels', 'economy', 'welcome', 'goodbye'];
         if (!validSettings.includes(setting)) {
-          return message.reply('❌ Доступні налаштування: moderation, levels, economy, welcome, goodbye');
+          return message.reply(err('Доступні налаштування: moderation, levels, economy, welcome, goodbye'));
         }
         
         const boolValue = value === 'true';
@@ -69,23 +70,23 @@ export default {
           await Dialog.updateById(message.Dialog.ID, { [setting]: boolValue });
         }
         
-        return message.reply(`✅ ${setting} встановлено на ${boolValue ? 'увімкнено' : 'вимкнено'}`);
+        return message.reply(msg('✅', `${setting} встановлено на ${boolValue ? 'увімкнено' : 'вимкнено'}`));
       }
 
       // Встановлення токену
       if (action === 'token') {
         if (!setting || !value) {
-          return message.reply('❌ Використання: /settings token <dialog_id> <token>');
+          return message.reply(err('Використання: /settings token <dialog_id> <token>'));
         }
         
         await Dialog.updateById(setting, { token: value });
-        return message.reply('✅ Токен встановлено');
+        return message.reply(msg('✅', 'Токен встановлено'));
       }
 
-      message.reply('❌ Доступні дії: show, set, token');
+      message.reply(err('Доступні дії: show, set, token'));
     } catch (error) {
       console.error('Settings error:', error);
-      message.reply('❌ Помилка при роботі з налаштуваннями');
+      message.reply(err('Помилка при роботі з налаштуваннями'));
     }
   }
 };
