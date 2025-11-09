@@ -6,7 +6,7 @@
     "commands": {
       "info": {
         "description": "Інформація про мене",
-        "info": "Базова інформація про бота Ayi, як: розробник, версія, профілів та діалогів у базі, ",
+        "info": "Базова інформація про бота Ayi:\n- розробник, версія, кількість профілів та діалогів у базі даних.",
         "usage": "info"
       },
       "help": {
@@ -18,10 +18,6 @@
         "description": "Переглянути профіль користувача",
         "usage": "profile (user)",
         "example": "profile @rastgame"
-      },
-      "card": {
-        "description": "Створити карточку привітання",
-        "usage": "card"
       }
     }
   },
@@ -38,11 +34,13 @@
       "invite": {
         "description": "Додати бота до групи",
         "usage": "invite [dialog.id]",
+        "permissions": [999],
         "example": "invite 123"
       }, 
       "leave": {
         "description": "Видалити бота з групи",
-        "info": "Бот автоматично покине групу і дані про групу та її користувачів, будуть автоматично видалені з базі даних",
+        "permissions": [512],
+        "info": "Бот автоматично покине групу і дані про групу та її користувачів будуть автоматично видалені з бази даних",
         "usage": "leave"
       },
       "encrypt": {
@@ -85,6 +83,7 @@
       "clear": {
         "description": "Очистити повідомлення",
         "usage": "clear [кількість]",
+        "permissions": [2],
         "example": ["clear 10", "clear 25"],
         "info": "Максимум 40 повідомлень за раз"
       }
@@ -98,14 +97,16 @@
       "settings": {
         "description": "Налаштування групи",
         "usage": "settings [show|set] [параметр] [значення]",
+        "permissions": [8],
         "example": ["settings show", "settings set levels true", "settings set welcome {user} Привіт!", "settings set goodbye {user} Бувай!"],
-        "info": "Параметри: `moderation, levels, economy, welcome, goodbye`\nᯓ Для *welc/bye*: true/false або текст\nДодатково ➜ {a.prefix}help placeholders\n"
+        "info": "Параметри: `moderation, levels, economy, welcome, goodbye`\nᯓ Для welcome/goodbye: true/false або текст\nДодатково ➜ {a.prefix}help placeholders"
       },
       "token": {
         "description": "Встановлення токену",
         "usage": "token [dialog] [токен]",
+        "permissions": [999],
         "example": "token 292 y.h8N2cV4pL0r9G7kS5tY1wQ6mXz3BfZq",
-        "info": "Ви маєте бути власником групи\nЦю команду вписуємо тільки в особистих повідомленнях :double-exclamation:"
+        "info": "Ви маєте бути власником групи\nЦю команду використовуємо тільки в особистих повідомленнях :double-exclamation:\n"
       },
       "perms": {
         "description": "Керування правами користувачів",
@@ -149,13 +150,13 @@
         "description": "Плейсхолдері (привітання/прощавання)",
         "header": "Змінні, що автоматично підставляють дані у повідомлення",
         "usage": "placeholders",
-        "info": "Користувач:\n`{user}` - посилання на користувача\n`{{user.name}}` - ім'я користувача\n`{{user.surname}}` - прізвище користувача\n`{{user.registration_at}}` - дата реєстрації\n`{{user.id}}` - ID користувача\n`{{user.about}}` - опис користувача\n`{{user.avatar}}` - ID аватара\n`{{user.avatar.url}}` - посилання на аватар\n\n⊹ Група:\n`{dialog}` - посилання на групу\n`{{dialog.id}}` - ID групи\n`{{dialog.name}}` - назва групи\n`{{dialog.members}}` - кількість учасників\n`{{dialog.description}}` - опис групи\n`{{dialog.avatar}}` - ID аватара групи\n`{{dialog.avatar.url}}` - посилання на аватар групи\n`{{dialog.author.name}}` - ім'я власника\n`{{dialog.author.id}}` - ID власника\n`{{dialog.author.link}}` - посилання на власника\n\n⊹ Час:\n`{time}` - поточний час"
+        "info": "⊹ Користувач:\n`{user}` - посилання на користувача\n`{{user.name}}` - ім'я користувача\n`{{user.surname}}` - прізвище користувача\n`{{user.registration_at}}` - дата реєстрації\n`{{user.id}}` - ID користувача\n`{{user.about}}` - опис користувача\n`{{user.avatar}}` - ID аватара\n`{{user.avatar.url}}` - посилання на аватар\n\n⊹ Група:\n`{dialog}` - посилання на групу\n`{{dialog.id}}` - ID групи\n`{{dialog.name}}` - назва групи\n`{{dialog.members}}` - кількість учасників\n`{{dialog.description}}` - опис групи\n`{{dialog.avatar}}` - ID аватара групи\n`{{dialog.avatar.url}}` - посилання на аватар групи\n`{{dialog.author.name}}` - ім'я власника\n`{{dialog.author.id}}` - ID власника\n`{{dialog.author.link}}` - посилання на власника\n\n⊹ Час:\n`{time}` - поточний час"
       },
       "permissions": {
         "description": "Система прав",
         "header": "Про систему прав та їх числові значення",
         "usage": "permissions",
-        "info": "Числові значення прав:\n`1` - **WRITE** (писати повідомлення)\n`2` - **DELETE_MSG** (видаляти повідомлення)\n`4` - **EDIT_MSG** (редагувати повідомлення)\n`8` - **EDIT_GROUP** (редагувати групу)\n`16` - **KICK** (вигнати користувача)\n`32` - **BAN** (забанити користувача)\n`64` - **MUTE** (зам'ютити користувача)\n`128` - **MANAGE_PERMS** (керувати правами)\n`256` - **MANAGE_ADMINS** (керувати адмінами)\n`512` - **ADMIN** (адміністратор)\n\n⮕ Права можна комбінувати\n\nСпеціальні команди:\n**ALL** - всі права одразу\n**MODERATOR** - згустка прав (DELETE_MSG + KICK + MUTE)"
+        "info": "⊹ Числові значення прав:\n`1` - **WRITE** (писати повідомлення)\n`2` - **DELETE_MSG** (видаляти повідомлення)\n`4` - **EDIT_MSG** (редагувати повідомлення)\n`8` - **EDIT_GROUP** (редагувати групу)\n`16` - **KICK** (вигнати користувача)\n`32` - **BAN** (забанити користувача)\n`64` - **MUTE** (зам'ютити користувача)\n`128` - **MANAGE_PERMS** (керувати правами)\n`256` - **MANAGE_ADMINS** (керувати адмінами)\n`512` - **ADMIN** (адміністратор)\n`999` - **Власник** (спеціальне значення)\n\n⊹ Права можна комбінувати (сумувати числа)\n\n⊹ Спеціальні команди:\n**ALL** - всі права одразу\n**MODERATOR** - згустка прав (DELETE_MSG + KICK + MUTE)"
       }
     }
   }

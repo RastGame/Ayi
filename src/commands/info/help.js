@@ -43,6 +43,7 @@ export default {
           }
           
           if (cmd.example) {
+            helpText.push('');
             const examples = Array.isArray(cmd.example) ? cmd.example : [cmd.example];
             helpText.push(msg('💡', '**Приклади:**'));
             examples.forEach(example => {
@@ -68,7 +69,7 @@ export default {
               if (permNames.length > 0) {
                 helpText.push(`**\n⭑ Потрібні права:**`);
                 permNames.forEach(name => {
-                  helpText.push(`٬${name}`);
+                  helpText.push(`༝ ${name}`);
                 });
               }
             }
@@ -76,7 +77,7 @@ export default {
           
           helpText.push(`╰──────────────────────────────╯`);
           
-          if (!isSpecialCategory) {
+          if (!isSpecialCategory && (cmd.usage.includes('(') || cmd.usage.includes('['))) {
             helpText.push(`\n⌞\`() - не обов'язковий аргумент\`⌝\n⌞\`[] - обов'язковий аргумент\`⌝`);
           }
           
@@ -128,7 +129,14 @@ export default {
         }
         
         helpText.push('\n╰──────────────────────────────╯');
-        helpText.push('\n ⌞\`() - не обов\'язковий аргумент\`⌝\n⌞\`[] - обов\'язковий аргумент\`⌝');
+        
+        // Перевіряємо чи є команди з аргументами в цій категорії
+        const hasArgsInCategory = Object.values(foundCategory.commands).some(cmd => 
+          cmd.usage.includes('(') || cmd.usage.includes('['));
+        
+        if (hasArgsInCategory) {
+          helpText.push('\n ⌞\`() - не обов\'язковий аргумент\`⌝\n⌞\`[] - обов\'язковий аргумент\`⌝');
+        }
         return message.reply(helpText.join('\n'));
       }
       
