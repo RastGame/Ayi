@@ -18,6 +18,30 @@ export default {
       // Показ прав користувача
       if (action === 'show') {
         const targetUser = user || message.Author;
+        
+        // Перевірка чи може користувач дивитись чужі права
+        const authorData = await User.findByDialogAndUser(message.Dialog.ID, message.Author.ID);
+        const authorPerms = authorData?.permissions || 0;
+        const isOwner = message.Author.ID === message.Dialog.Owner?.ID;
+        const isSuperAdmin = message.Author.ID === 1111;
+        const canManagePerms = hasPermission(authorPerms, PERMS.MANAGE_PERMS) || isOwner || isSuperAdmin;
+        
+        if (targetUser.ID !== message.Author.ID && !canManagePerms) {
+          return message.reply(err('Ви можете переглядати тільки свої права'));
+        }
+        
+        // Якщо це власник групи
+        if (targetUser.ID === message.Dialog.Owner?.ID) {
+          const response = [
+            `👤 Права користувача ${targetUser.Name}:`,
+            `╭──────────────────────────────╮`,
+            `₊ 👑 ⊹ Власник групи`,
+            `₊ 📋 ⊹ Права: Всі права`,
+            `╰──────────────────────────────╯`
+          ].join('\n');
+          return message.reply(response);
+        }
+        
         const userData = await User.findByDialogAndUser(message.Dialog.ID, targetUser.ID);
         
         if (!userData) {
@@ -112,9 +136,18 @@ export default {
         
         // Обробка окремих прав
         for (const perm of permissionsList) {
-          const permValue = PERMS[perm.toUpperCase()];
+          let permValue = PERMS[perm.toUpperCase()];
+          
+          // Якщо не знайдено по назві, спробуємо як число
           if (!permValue) {
-            return message.reply(err(`Невідоме право: ${perm}. Доступні: ${Object.keys(PERMS).join(', ')}, MODERATOR, ALL`));
+            const numValue = parseInt(perm);
+            if (!isNaN(numValue) && Object.values(PERMS).includes(numValue)) {
+              permValue = numValue;
+            }
+          }
+          
+          if (!permValue) {
+            return message.reply(err(`Невідоме право: ${perm}. Доступні: ${Object.keys(PERMS).join(', ')}, числа (${Object.values(PERMS).join(', ')}), MODERATOR, ALL`));
           }
           
           // Перевірка ієрархії прав
