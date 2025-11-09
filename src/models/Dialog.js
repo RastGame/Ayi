@@ -1,4 +1,6 @@
 import { getDB } from '../modules/db.js';
+import { REST } from '@yurbajs/rest';
+import { decryptToken } from '../utils/crypto.js';
 
 export class Dialog {
   static async findById(dialogId) {
@@ -43,5 +45,11 @@ export class Dialog {
   static async deleteById(dialogId) {
     const db = getDB();
     return await db.collection('dialogs').deleteOne({ _id: dialogId });
+  }
+
+  static async getAPI(dialogId) {
+    const dialog = await this.findById(dialogId);
+    if (!dialog?.token) return null;
+    return new REST(decryptToken(dialog.token));
   }
 }

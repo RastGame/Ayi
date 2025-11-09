@@ -2,6 +2,8 @@ import { Dialog } from '../../models/Dialog.js';
 import { Welcomer } from '../../models/Welcomer.js';
 import { err, msg } from '../../utils/messages.js';
 
+const ADMIN_ID = 1111;
+
 export default {
   name: 'settings',
   args: { action: 'string', setting: {type: 'string', required: false}, value: {type: 'string', required: false, rest: true} },
@@ -38,7 +40,7 @@ export default {
       }
 
       // Перевірка прав власника
-      if (message.Author.ID !== message.Dialog.Owner?.ID && message.Author.ID !== 1111) {
+      if (message.Author.ID !== message.Dialog.Owner?.ID && message.Author.ID !== ADMIN_ID) {
         return message.reply(err('Тільки власник діалогу може змінювати налаштування!'));
       }
 
@@ -73,9 +75,7 @@ export default {
         return message.reply(msg('✅', `${setting} встановлено на ${boolValue ? 'увімкнено' : 'вимкнено'}`));
       }
 
-
-
-      message.reply(err('Доступні дії: show, set'));
+      return message.reply(err('Доступні дії: show, set'));
     } catch (error) {
       console.error('Settings error:', error);
       message.reply(err('Помилка при роботі з налаштуваннями'));

@@ -1,4 +1,3 @@
-import { REST } from '@yurbajs/rest';
 import { Dialog } from '../../models/Dialog.js';
 
 function parseTime(timeStr) {
@@ -31,18 +30,17 @@ export default {
         return message.reply('❌ Тільки власник діалогу може використовувати цю команду!');
       }
 
-      const dialog = await Dialog.findById(message.Dialog.ID);
-      if (!dialog || !dialog.token) {
-        return message.reply('❌ Токен не встановлено для цього діалогу');
-      }
-
       const timeMs = parseTime(args.time);
       if (!timeMs) {
         return message.reply('❌ Неправильний формат часу! Використовуйте: 1h, 10d, 1m, 1y');
       }
 
+      const api = await Dialog.getAPI(message.Dialog.ID);
+      if (!api) {
+        return message.reply('❌ Токен не встановлено для цього діалогу');
+      }
+
       const cutoffTime = Date.now() - timeMs;
-      const api = new REST(dialog.token, { debug: true });
       
       await message.reply('🔍 Шукаю неактивних користувачів...');
 

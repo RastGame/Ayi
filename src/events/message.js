@@ -2,7 +2,6 @@ import { User } from '../models/User.js';
 import { Profile } from '../models/Profile.js';
 import { Dialog } from '../models/Dialog.js';
 import { Mute } from '../models/Mute.js';
-import { REST } from '@yurbajs/rest';
 
 
 export default {
@@ -43,7 +42,8 @@ export default {
             // Видалити повідомлення через API
             try {
               console.log("BOT: START DELETING MESSAGE: ", message.ID)
-              const api = new REST(dialog.token, {debug:true});
+              const api = await Dialog.getAPI(message.Dialog.ID);
+              if (!api) return message.reply('🔇 Ти в муті');
               const result = await api.dialogs.deleteMessage(message.ID);
               console.log('BOT: WHAT RETURNS DELETE: ', result, ' || MESSAGE-ID: ', message.ID);
             } catch (error) {

@@ -1,4 +1,3 @@
-import { REST } from '@yurbajs/rest';
 import { Dialog } from '../../models/Dialog.js';
 import { err, msg } from '../../utils/messages.js';
 
@@ -22,13 +21,10 @@ export default {
         return message.reply(err('Недостатньо прав!'));
       }
 
-      const dialog = await Dialog.findById(message.Dialog.ID);
-      if (!dialog || !dialog.token) {
+      const api = await Dialog.getAPI(message.Dialog.ID);
+      if (!api) {
         return message.reply(err(`**Токен не встановлений** для цього діалогу\n⤷ \`${client.prefix}help token\``));
       }
-
-      
-      const api = new REST(dialog.token);
     
 
       const userText = user ? ` користувача @${user.Link}` : '';

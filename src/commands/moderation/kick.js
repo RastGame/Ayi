@@ -1,4 +1,3 @@
-import { REST } from '@yurbajs/rest';
 import { Dialog } from '../../models/Dialog.js';
 
 export default {
@@ -15,12 +14,10 @@ export default {
         return message.reply('❌ Тільки власник діалогу може !');
       }
 
-      const dialog = await Dialog.findById(message.Dialog.ID);
-      if (!dialog || !dialog.token) {
+      const api = await Dialog.getAPI(message.Dialog.ID);
+      if (!api) {
         return message.reply('❌ Токен не встановлено для цього діалогу');
       }
-
-      const api = new REST(dialog.token, { debug:true });
       const kick = await api.dialogs.removeMember(message.Dialog.ID, args.user.ID);
 
       const response = `Користувача: ${args.user.Name}, Видалено`
