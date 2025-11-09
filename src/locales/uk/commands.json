@@ -149,7 +149,7 @@
         "description": "Плейсхолдері (привітання/прощавання)",
         "header": "Змінні, що автоматично підставляють дані у повідомлення",
         "usage": "placeholders",
-        "info": "Всі доступні на цю міть:\n{user} - згадка користувача\n{user.name} - ім'я користувача\n{user.link} - посилання на користувача\n{dialog.name} - назва групи\n{dialog.members} - кількість учасників\n{date} - поточна дата\n{time} - поточний час"
+        "info": "Користувач:\n`{user}` - посилання на користувача\n`{{user.name}}` - ім'я користувача\n`{{user.surname}}` - прізвище користувача\n`{{user.registration_at}}` - дата реєстрації\n`{{user.id}}` - ID користувача\n`{{user.about}}` - опис користувача\n`{{user.avatar}}` - ID аватара\n`{{user.avatar.url}}` - посилання на аватар\n\n⊹ Група:\n`{dialog}` - посилання на групу\n`{{dialog.id}}` - ID групи\n`{{dialog.name}}` - назва групи\n`{{dialog.members}}` - кількість учасників\n`{{dialog.description}}` - опис групи\n`{{dialog.avatar}}` - ID аватара групи\n`{{dialog.avatar.url}}` - посилання на аватар групи\n`{{dialog.author.name}}` - ім'я власника\n`{{dialog.author.id}}` - ID власника\n`{{dialog.author.link}}` - посилання на власника\n\n⊹ Час:\n`{time}` - поточний час"
       },
       "permissions": {
         "description": "Система прав",
