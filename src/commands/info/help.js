@@ -42,32 +42,36 @@ export default {
             helpText.push(`**\n⊹ ${cmd.info}**`);
           }
           
-          // Відображення потрібних прав
-          if (cmd.permissions && Array.isArray(cmd.permissions)) {
-            const permNames = [];
-            
-            for (const perm of cmd.permissions) {
-              if (perm === 999) {
-                permNames.push('Власник');
-              } else if (PERM_NAMES[perm]) {
-                permNames.push(PERM_NAMES[perm]);
-              }
-            }
-            
-            if (permNames.length > 0) {
-              helpText.push(`**\n⭑ Потрібні права:**`);
-              permNames.forEach(name => {
-                helpText.push(`٬${name}`);
-              });
-            }
-          }
-          
           if (cmd.example) {
             const examples = Array.isArray(cmd.example) ? cmd.example : [cmd.example];
             helpText.push(msg('💡', '**Приклади:**'));
             examples.forEach(example => {
               helpText.push(isSpecialCategory ? `  ⤷ \`${example}\`` : `  ⤷ \`${prefix}${example}\``);
             });
+          }
+          
+          // Відображення потрібних прав
+          if (cmd.permissions && Array.isArray(cmd.permissions)) {
+            // Перевіряємо чи є 999 (тільки власник)
+            if (cmd.permissions.includes(999)) {
+              helpText.push(`**\n⭑ Потрібні права:**`);
+              helpText.push(`٬Власник`);
+            } else {
+              const permNames = [];
+              
+              for (const perm of cmd.permissions) {
+                if (PERM_NAMES[perm]) {
+                  permNames.push(PERM_NAMES[perm]);
+                }
+              }
+              
+              if (permNames.length > 0) {
+                helpText.push(`**\n⭑ Потрібні права:**`);
+                permNames.forEach(name => {
+                  helpText.push(`٬${name}`);
+                });
+              }
+            }
           }
           
           helpText.push(`╰──────────────────────────────╯`);

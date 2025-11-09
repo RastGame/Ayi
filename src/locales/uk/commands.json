@@ -66,17 +66,19 @@
         "description": "Видалити користувача з групи",
         "usage": "kick [user]",
         "example": ["kick @rastgame", "kick 123"],
-        "permissions": [16, 999],
-        "info": "Видаляє користувача з групи назавжди"
+        "permissions": [16],
+        "info": "Видаляє користувача з групи"
       },
       "kickunactive": {
         "description": "Видалити неактивних користувачів",
         "usage": "kickunactive [час]",
+        "permissions": [16],
         "example": ["kickunactive 7d", "kickunactive 1m", "kickunactive 30d"],
         "info": "Формат часу: h (години), d (дні), m (місяці), y (роки)"
       },
       "mute": {
         "description": "Замутити користувача",
+        "permissions": [64],
         "usage": "mute [user] [час] (причина)",
         "example": "mute @rastgame 60 спам"
       },
@@ -148,6 +150,12 @@
         "header": "Змінні, що автоматично підставляють дані у повідомлення",
         "usage": "placeholders",
         "info": "Всі доступні на цю міть:\n{user} - згадка користувача\n{user.name} - ім'я користувача\n{user.link} - посилання на користувача\n{dialog.name} - назва групи\n{dialog.members} - кількість учасників\n{date} - поточна дата\n{time} - поточний час"
+      },
+      "permissions": {
+        "description": "Система прав",
+        "header": "Про систему прав та їх числові значення",
+        "usage": "permissions",
+        "info": "Числові значення прав:\n`1` - **WRITE** (писати повідомлення)\n`2` - **DELETE_MSG** (видаляти повідомлення)\n4 - EDIT_MSG (редагувати повідомлення)\n8 - EDIT_GROUP (редагувати групу)\n16 - KICK (вигнати користувача)\n32 - BAN (забанити користувача)\n64 - MUTE (зам'ютити користувача)\n128 - MANAGE_PERMS (керувати правами)\n256 - MANAGE_ADMINS (керувати адмінами)\n512 - ADMIN (адміністратор)\n999 - Власник (спеціальне значення)\n\nПрава можна комбінувати (сумувати числа)\n\nСпеціальні команди:\nALL - всі права одразу\nMODERATOR - згустка прав (DELETE_MSG + KICK + MUTE)"
       }
     }
   }
