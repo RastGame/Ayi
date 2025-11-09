@@ -1,9 +1,11 @@
 import { Dialog } from '../../models/Dialog.js';
 import { err, msg } from '../../utils/messages.js';
+import { PERMS } from '../../utils/permissions.js';
 
 export default {
   name: 'clear',
   args: {count: 'int', user: {type: 'user', required: false}},
+  permissions: [PERMS.DELETE_MSG],
   cooldown: 10000,
   handler: async (client, message, args) => {
     try {
@@ -14,11 +16,6 @@ export default {
       const { count, user } = args;
       if (count < 1 || count > 40) {
         return message.reply(msg(':double-exclamation:', 'Кількість повідомлень має бути **від 1 до 40**'));
-      }
-
-
-      if (message.Author.ID !== message.Dialog.Owner?.ID && message.Author.ID !== 1111) {
-        return message.reply(err('Недостатньо прав!'));
       }
 
       const api = await Dialog.getAPI(message.Dialog.ID);
