@@ -5,7 +5,7 @@ import { encryptToken } from '../../utils/crypto.js';
 
 export default {
   name: 'token',
-  args: { dialog_id: 'string', token: 'string' },
+  args: { dialog_id: 'int', token: 'string' },
   handler: async (client, message, args) => {
     try {
       const { dialog_id, token } = args;
@@ -36,10 +36,10 @@ export default {
         console.error('Token error:', error);
         return message.reply(err('Група не знайдена або немає доступу!'));
       }
-      
+
       const encryptedToken = encryptToken(token);
       
-      await Dialog.updateById(dialog_id, { token: encryptedToken });
+      console.log(await Dialog.updateById(dialog_id, { token: encryptedToken }))
       return message.reply(msg('✅', 'Токен встановлено'));
     } catch (error) {
       console.error('Token error:', error);
