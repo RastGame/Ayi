@@ -58,5 +58,9 @@ export class Profile {
     );
   }
 
+  static async deleteById(userId) {
+    const db = getDB();
+    return await db.collection('profiles').deleteOne({ _id: userId });
+  }
 
 }

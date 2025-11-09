@@ -1,12 +1,13 @@
 {
-  "Інформація": {
+  "info": {
+    "name": "Інформація",
     "emoji": ":mag_right:",
-    "aliases": ["info", "information"],
+    "aliases": ["inf", "information"],
     "commands": {
       "info": {
         "description": "Інформація про мене",
-        "usage": "info",
-        "example": "info"
+        "info": "Базова інформація про бота Ayi, як: розробник, версія, профілів та діалогів у базі, ",
+        "usage": "info"
       },
       "help": {
         "description": "Список усіх команд",
@@ -20,12 +21,12 @@
       },
       "card": {
         "description": "Створити карточку привітання",
-        "usage": "card",
-        "example": "card"
+        "usage": "card"
       }
     }
   },
-  "Утиліти": {
+  "utility": {
+    "name": "Утиліти",
     "emoji": ":hammer_and_wrench:",
     "aliases": ["utility", "utils"],
     "commands": {
@@ -41,8 +42,8 @@
       }, 
       "leave": {
         "description": "Видалити бота з групи",
-        "usage": "leave",
-        "example": "leave"
+        "info": "Бот автоматично покине групу і дані про групу та її користувачів, будуть автоматично видалені з базі даних",
+        "usage": "leave"
       },
       "encrypt": {
         "description": "Зашифрувати текст",
@@ -56,7 +57,8 @@
       }
     }
   },
-  "Модерація": {
+  "moderation": {
+    "name": "Модерація",
     "emoji": ":shield:",
     "aliases": ["moderation", "mod"],
     "commands": {
@@ -64,7 +66,8 @@
         "description": "Видалити користувача з групи",
         "usage": "kick [user]",
         "example": ["kick @rastgame", "kick 123"],
-        "info": "Тільки власник групи може використовувати цю команду"
+        "permissions": [16, 999],
+        "info": "Видаляє користувача з групи назавжди"
       },
       "kickunactive": {
         "description": "Видалити неактивних користувачів",
@@ -85,28 +88,34 @@
       }
     }
   },
-  "Адміністрація": {
+  "admin": {
+    "name": "Адміністрація",
     "emoji": ":gear:",
     "aliases": ["admin", "administration"],
     "commands": {
       "settings": {
         "description": "Налаштування групи",
-        "usage": "settings [show|set|token]",
-        "example": "settings show"
+        "usage": "settings [show|set] [параметр] [значення]",
+        "example": ["settings show", "settings set levels true", "settings set welcome {user} Привіт!", "settings set goodbye {user} Бувай!"],
+        "info": "Параметри: `moderation, levels, economy, welcome, goodbye`\nᯓ Для *welc/bye*: true/false або текст\nДодатково ➜ {a.prefix}help placeholders\n"
       },
-      "welcome": {
-        "description": "Налаштування привітання",
-        "usage": "welcome (текст)",
-        "example": "welcome Привіт {user}!"
+      "token": {
+        "description": "Встановлення токену",
+        "usage": "token [dialog] [токен]",
+        "example": "token 292 y.h8N2cV4pL0r9G7kS5tY1wQ6mXz3BfZq",
+        "info": "Ви маєте бути власником групи\nЦю команду вписуємо тільки в особистих повідомленнях :double-exclamation:"
       },
-      "goodbye": {
-        "description": "Налаштування прощавання",
-        "usage": "goodbye (текст)",
-        "example": "goodbye До побачення {user}!"
+      "perms": {
+        "description": "Керування правами користувачів",
+        "usage": "perms [show|give|take] (user) (permissions...)",
+        "example": ["perms show @rastgame", "perms give @rastgame MODERATOR", "perms take @rastgame ALL"],
+        "permissions": [128],
+        "info": "Можна вказувати кілька прав одразу або ALL для всіх\nПрава: WRITE, DELETE_MSG, EDIT_MSG, EDIT_GROUP, KICK, BAN, MUTE, MANAGE_PERMS, MANAGE_ADMINS, ADMIN\nMODERATOR = DELETE_MSG + KICK + MUTE"
       }
     }
   },
-  "ШІ": {
+  "ai": {
+    "name": "ШІ",
     "emoji": ":dizzy:",
     "aliases": ["ai", "artificial"],
     "commands": {
@@ -117,7 +126,8 @@
       }
     }
   },
-  "Рівні": {
+  "levels": {
+    "name": "Рівні",
     "emoji": ":zap:",
     "aliases": ["levels", "level"],
     "commands": {
@@ -125,6 +135,19 @@
         "description": "Картка рівня користувача",
         "usage": "rank (user)",
         "example": "rank @rastgame"
+      }
+    }
+  },
+  "unix": {
+    "name": "Додатково",
+    "emoji": ":sparkles:",
+    "aliases": ["unique", "special"],
+    "commands": {
+      "placeholders": {
+        "description": "Плейсхолдері (привітання/прощавання)",
+        "header": "Змінні, що автоматично підставляють дані у повідомлення",
+        "usage": "placeholders",
+        "info": "Всі доступні на цю міть:\n{user} - згадка користувача\n{user.name} - ім'я користувача\n{user.link} - посилання на користувача\n{dialog.name} - назва групи\n{dialog.members} - кількість учасників\n{date} - поточна дата\n{time} - поточний час"
       }
     }
   }

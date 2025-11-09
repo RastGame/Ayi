@@ -2,7 +2,7 @@ import { User } from '../../models/User.js';
 import { Profile } from '../../models/Profile.js';
 import { Dialog } from '../../models/Dialog.js';
 import { err, msg } from '../../utils/messages.js';
-import { getDB } from '../../modules/db.js';
+import { getDB, connectDB } from '../../modules/db.js';
 import { LevelUtils } from '../../utils/levels.js';
 
 export default {
@@ -19,12 +19,15 @@ export default {
       }
 
       if (type === 'local') {
+        let db = getDB();
+        if (!db) {
+          db = await connectDB();
+        }
+        
         const dialog = await Dialog.findById(message.Dialog.ID);
         if (!dialog?.levels) {
           return message.reply(err('Рівні вимкнені в цій групі'));
         }
-
-        const db = getDB();
         const users = await db.collection('users')
           .find({ '_id.dialog': message.Dialog.ID })
           .sort({ xp: -1 })
@@ -35,16 +38,33 @@ export default {
           return message.reply(msg('📊', 'Топ порожній'));
         }
 
-        const topList = users.map((user, index) => {
+        const topEntries = await Promise.all(users.map(async (user, index) => {
           const level = LevelUtils.getLocalLevel(user.xp);
-          return `${index + 1}. @u${user._id.id} • Рівень ${level} • ${user.xp} XP`;
-        }).join('\n');
+          try {
+            const userData = await client.api.users.get(user._id.id);
+            const name = userData ? userData.Name : `User${user._id.id}`;
+            const link = userData ? userData.Link : `u${user._id.id}`;
+            return `${index + 1}.  **${name}** ♯ @${link} ₊ \`${level}\`│*${user.xp} XP*`;
+          } catch {
+            return `${index + 1}.  **User${user._id.id}** ♯ @u${user._id.id} ₊ \`${level}\`│*${user.xp} XP*`;
+          }
+        }));
 
-        return message.reply(`📊 Топ-10 локального рейтингу:\n\n${topList}`);
+        const response = [
+          `﹒📊イ Топ-10 локального рейтингу:`,
+          `╭──────────────────────────────╮`,
+          ...topEntries,
+          `╰──────────────────────────────╯`
+        ].join('\n');
+
+        return message.reply(response);
       }
 
       if (type === 'global') {
-        const db = getDB();
+        let db = getDB();
+        if (!db) {
+          db = await connectDB();
+        }
         const profiles = await db.collection('profiles')
           .find({})
           .sort({ xp: -1 })
@@ -55,12 +75,27 @@ export default {
           return message.reply(msg('🌍', 'Глобальний топ порожній'));
         }
 
-        const topList = profiles.map((profile, index) => {
+        const topEntries = await Promise.all(profiles.map(async (profile, index) => {
           const level = LevelUtils.getGlobalLevel(profile.xp);
-          return `${index + 1}. @u${profile._id} • Рівень ${level} • ${profile.xp} XP`;
-        }).join('\n');
+          try {
+            const user = await client.api.users.get(profile._id);
+            const name = user ? user.Name : `User${profile._id}`;
+            const link = user ? user.Link : `u${profile._id}`;
+            return `${index + 1}.  **${name}** ♯ @${link} ₊ \`${level}\`│*${profile.xp} XP*`;
+          } catch {
+            return `${index + 1}.  **User${profile._id}** ♯ @u${profile._id} ₊ \`${level}\`│*${profile.xp} XP*`;
+          }
+        }));
+        
+        const response = [
+          `﹒🌍イ Топ-10 глобального рейтингу:`,
+          `╭──────────────────────────────╮`,
+          ...topEntries,
+          `╰──────────────────────────────╯`
+        ].join('\n');
+        
+        return message.reply(response);
 
-        return message.reply(`🌍 Топ-10 глобального рейтингу:\n\n${topList}`);
       }
 
       return message.reply(err('Доступні типи: local, global'));

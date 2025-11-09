@@ -25,18 +25,30 @@ export default {
         const tokenStatus = dialog.token ? '🔑 Встановлено' : '❌ Відсутній';
         const welcomeStatus = welcomer?.welcome?.enabled ? '✅' : '❌';
         const goodbyeStatus = welcomer?.goodbye?.enabled ? '✅' : '❌';
+        
         const response = [
           `⚙️ Налаштування діалогу`,
           `╭───────────────────────────────╮`,
-          `₊ 🔑 ⊹ Токен: ${tokenStatus}`,
-          `₊ 🛡️ ⊹ Модерація: ${dialog.moderation ? '✅' : '❌'}`,
-          `₊ 📊 ⊹ Рівні: ${dialog.levels ? '✅' : '❌'}`,
-          `₊ 💰 ⊹ Економіка: ${dialog.economy ? '✅' : '❌'}`,
-          `₊ 👋 ⊹ Привітання: ${welcomeStatus}`,
-          `₊ 👋 ⊹ Прощавання: ${goodbyeStatus}`,
-          `╰───────────────────────────────╯`
-        ].join('\n');
-        return message.reply(response);
+          `₊\`🔑\`⊹ Токен: ${tokenStatus}`,
+          `₊\`🛡️\`⊹ Модерація: ${dialog.moderation ? '✅' : '❌'}`,
+          `₊\`📊\`⊹ Рівні: ${dialog.levels ? '✅' : '❌'}`,
+          `₊\`💰\`⊹ Економіка: ${dialog.economy ? '✅' : '❌'}`,
+          `₊\`👋\`⊹ Привітання: ${welcomeStatus}`,
+        ];
+        
+        if (welcomer?.welcome?.enabled && welcomer?.welcome?.text) {
+          response.push(`\`${welcomer.welcome.text}\``);
+        }
+        
+        response.push(`₊ 👋 ⊹ Прощавання: ${goodbyeStatus}`);
+        
+        if (welcomer?.goodbye?.enabled && welcomer?.goodbye?.text) {
+          response.push(`\`${welcomer.goodbye.text}\``);
+        }
+        
+        response.push(`╰───────────────────────────────╯`);
+        
+        return message.reply(response.join('\n'));
       }
 
       // Перевірка прав власника
@@ -46,8 +58,8 @@ export default {
 
       // Зміна налаштувань
       if (action === 'set') {
-        if (!setting || !value) {
-          return message.reply(err('Використання: /settings set <moderation|levels|economy> <true|false>'));
+        if (!setting) {
+          return message.reply(err('Використання: /settings set <moderation|levels|economy|welcome|goodbye> <true|false|text>'));
         }
         
         const validSettings = ['moderation', 'levels', 'economy', 'welcome', 'goodbye'];
@@ -55,24 +67,42 @@ export default {
           return message.reply(err('Доступні налаштування: moderation, levels, economy, welcome, goodbye'));
         }
         
-        const boolValue = value === 'true';
-        
         if (setting === 'welcome' || setting === 'goodbye') {
           let welcomer = await Welcomer.findById(message.Dialog.ID);
           if (!welcomer) {
             await Welcomer.create(message.Dialog.ID);
           }
           
-          if (setting === 'welcome') {
-            await Welcomer.setWelcome(message.Dialog.ID, boolValue);
+          if (!value) {
+            const currentText = setting === 'welcome' ? welcomer.welcome?.text : welcomer.goodbye?.text;
+            return message.reply(msg('📝', `Поточний текст ${setting === 'welcome' ? 'привітання' : 'прощавання'}:\n${currentText || 'Не встановлено'}`));
+          }
+          
+          if (value === 'true' || value === 'false') {
+            const boolValue = value === 'true';
+            if (setting === 'welcome') {
+              await Welcomer.setWelcome(message.Dialog.ID, boolValue);
+            } else {
+              await Welcomer.setGoodbye(message.Dialog.ID, boolValue);
+            }
+            return message.reply(msg('✅', `${setting} встановлено на ${boolValue ? 'увімкнено' : 'вимкнено'}`));
           } else {
-            await Welcomer.setGoodbye(message.Dialog.ID, boolValue);
+            const currentEnabled = setting === 'welcome' ? welcomer.welcome?.enabled : welcomer.goodbye?.enabled;
+            if (setting === 'welcome') {
+              await Welcomer.setWelcome(message.Dialog.ID, currentEnabled || false, value);
+            } else {
+              await Welcomer.setGoodbye(message.Dialog.ID, currentEnabled || false, value);
+            }
+            return message.reply(msg('✅', `Текст ${setting === 'welcome' ? 'привітання' : 'прощавання'} оновлено!`));
           }
         } else {
+          if (!value) {
+            return message.reply(err('Вкажіть значення: true або false'));
+          }
+          const boolValue = value === 'true';
           await Dialog.updateById(message.Dialog.ID, { [setting]: boolValue });
+          return message.reply(msg('✅', `${setting} встановлено на ${boolValue ? 'увімкнено' : 'вимкнено'}`));
         }
-        
-        return message.reply(msg('✅', `${setting} встановлено на ${boolValue ? 'увімкнено' : 'вимкнено'}`));
       }
 
       return message.reply(err('Доступні дії: show, set'));

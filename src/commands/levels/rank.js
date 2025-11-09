@@ -30,6 +30,7 @@ export default {
       const level = LevelUtils.getLocalLevel(user.xp);
       const currentXP = LevelUtils.getLocalProgressXP(user.xp);
       const requiredXP = LevelUtils.getLocalRequiredXP(user.xp);
+      const rank = await User.getUserRank(message.Dialog.ID, targetUser.ID);
       
       const card = new RankCardBuilder()
         .setDisplayName(targetUser.Name + ' ' + targetUser.Surname)
@@ -38,7 +39,7 @@ export default {
         .setCurrentXP(currentXP)
         .setRequiredXP(requiredXP)
         .setLevel(level)
-        .setRank(1)
+        .setRank(rank)
 
         .setStatus(targetUser.Online.Status)
         .setProgressCalculator((currentXP, requiredXP) => {

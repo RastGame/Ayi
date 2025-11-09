@@ -10,7 +10,7 @@ export default {
       edit: message.ID
     });
 
-    console.log(JSON.stringify(message.getCommandArgs('!'), null, 2))
+    console.log(JSON.stringify(client.dialogs, null, 2))
     await message.reply(msg('✅', 'Тестова команда працює!'));
   }
 };

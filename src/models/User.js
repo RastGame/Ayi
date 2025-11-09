@@ -65,5 +65,24 @@ export class User {
     });
   }
 
+  static async getUserRank(dialogId, userId) {
+    const db = getDB();
+    const user = await this.findByDialogAndUser(dialogId, userId);
+    if (!user) return null;
+    
+    const rank = await db.collection('users').countDocuments({
+      '_id.dialog': dialogId,
+      xp: { $gt: user.xp }
+    });
+    
+    return rank + 1;
+  }
+
+  static async deleteAllByUser(userId) {
+    const db = getDB();
+    return await db.collection('users').deleteMany({
+      '_id.id': userId
+    });
+  }
 
 }

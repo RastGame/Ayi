@@ -1,13 +1,21 @@
 import fs from 'fs';
 import path from 'path';
 import { msg } from '../../utils/messages.js';
+import { processCommandData } from '../../utils/templateReplacer.js';
+import { PERMS, PERM_NAMES } from '../../utils/permissions.js';
 
 export default {
   name: 'help',
   args: { query: { type: 'string', required: false } },
   handler: async (client, message, args) => {
-    const commandsData = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'src/locales/uk/commands.json'), 'utf8'));
+    const rawCommandsData = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'src/locales/uk/commands.json'), 'utf8'));
     const prefix = client.prefix;
+    
+    // Обробка шаблонів
+    const templateVars = {
+      'a.prefix': prefix
+    };
+    const commandsData = processCommandData(rawCommandsData, templateVars);
     
     // Якщо вказано конкретну команду
     if (args.query) {
@@ -15,20 +23,59 @@ export default {
       for (const [categoryName, categoryData] of Object.entries(commandsData)) {
         if (categoryData.commands[args.query]) {
           const cmd = categoryData.commands[args.query];
+          const isSpecialCategory = categoryName === 'unix';
+          
           const helpText = [
             `:game_die: **${cmd.description}****`,
-            `╭──────────────────────────────╮`,
-            `ᯓ \`${prefix}${cmd.usage}\``,
-            `**${cmd.info && `\n⊹ ${cmd.info}` || ''}**`
+            `╭──────────────────────────────╮`
           ];
           
-          const examples = Array.isArray(cmd.example) ? cmd.example : [cmd.example];
-          helpText.push(msg('💡', '**Приклади:**'));
-          examples.forEach(example => {
-            helpText.push(`  ⤷ \`${prefix}${example}\``);
-          });
+          // Кастомний header або стандартний usage
+          if (cmd.header) {
+            helpText.push(`ᯓ ${cmd.header}`);
+          } else {
+            const usageLine = isSpecialCategory ? `ᯓ \`${cmd.usage}\`` : `ᯓ \`${prefix}${cmd.usage}\``;
+            helpText.push(usageLine);
+          }
           
-          helpText.push(`╰──────────────────────────────╯`, `\n⌞\`() - не обов'язковий аргумент\`⌝\n⌞\`[] - обов'язковий аргумент\`⌝`);
+          if (cmd.info) {
+            helpText.push(`**\n⊹ ${cmd.info}**`);
+          }
+          
+          // Відображення потрібних прав
+          if (cmd.permissions && Array.isArray(cmd.permissions)) {
+            const permNames = [];
+            
+            for (const perm of cmd.permissions) {
+              if (perm === 999) {
+                permNames.push('Власник');
+              } else if (PERM_NAMES[perm]) {
+                permNames.push(PERM_NAMES[perm]);
+              }
+            }
+            
+            if (permNames.length > 0) {
+              helpText.push(`**\n⭑ Потрібні права:**`);
+              permNames.forEach(name => {
+                helpText.push(`٬${name}`);
+              });
+            }
+          }
+          
+          if (cmd.example) {
+            const examples = Array.isArray(cmd.example) ? cmd.example : [cmd.example];
+            helpText.push(msg('💡', '**Приклади:**'));
+            examples.forEach(example => {
+              helpText.push(isSpecialCategory ? `  ⤷ \`${example}\`` : `  ⤷ \`${prefix}${example}\``);
+            });
+          }
+          
+          helpText.push(`╰──────────────────────────────╯`);
+          
+          if (!isSpecialCategory) {
+            helpText.push(`\n⌞\`() - не обов'язковий аргумент\`⌝\n⌞\`[] - обов'язковий аргумент\`⌝`);
+          }
+          
           return message.reply(helpText.join('\n'));
         }
       }
@@ -53,16 +100,27 @@ export default {
       }
       
       if (foundCategory) {
+        const categoryDisplayName = foundCategory.name || foundCategoryName;
         const helpText = [
-          `${foundCategory.emoji} **Категорія: ${foundCategoryName}**`,
+          `${foundCategory.emoji} **Категорія: ${categoryDisplayName}**`,
           '╭──────────────────────────────╮'
         ];
         
         for (const [commandName, commandData] of Object.entries(foundCategory.commands)) {
           helpText.push(`\n**${commandData.description}**`);
-          helpText.push(`  ⤷ \`${prefix}${commandData.usage}\``);
-          const firstExample = Array.isArray(commandData.example) ? commandData.example[0] : commandData.example;
-          helpText.push(`  💡 \`${prefix}${firstExample}\``);
+          if (foundCategoryName === 'unix') {
+            helpText.push(`  ⤷ \`${commandData.usage}\``);
+            if (commandData.example) {
+              const firstExample = Array.isArray(commandData.example) ? commandData.example[0] : commandData.example;
+              helpText.push(`  💡 \`${firstExample}\``);
+            }
+          } else {
+            helpText.push(`  ⤷ \`${prefix}${commandData.usage}\``);
+            if (commandData.example) {
+              const firstExample = Array.isArray(commandData.example) ? commandData.example[0] : commandData.example;
+              helpText.push(`  💡 \`${prefix}${firstExample}\``);
+            }
+          }
         }
         
         helpText.push('\n╰──────────────────────────────╯');
@@ -85,10 +143,19 @@ export default {
     ];
     
     for (const [categoryName, categoryData] of Object.entries(commandsData)) {
-      const commands = Object.keys(categoryData.commands).map(cmd => `\`${prefix}${cmd}\``).join(', ');
       const commandCount = Object.keys(categoryData.commands).length;
-      helpText.push(`\n₊ ${categoryData.emoji} ⊹ **${categoryName}** (${commandCount})`);
-      helpText.push(`${commands}`);
+      
+      const categoryDisplayName = categoryData.name || categoryName;
+      
+      if (categoryName === 'unix') {
+        const items = Object.keys(categoryData.commands).map(cmd => `\`${cmd}\``).join(', ');
+        helpText.push(`\n. ${categoryData.emoji} ༝ **${categoryDisplayName}**`);
+        helpText.push(`${items}`);
+      } else {
+        const commands = Object.keys(categoryData.commands).map(cmd => `\`${prefix}${cmd}\``).join(', ');
+        helpText.push(`\n₊ ${categoryData.emoji} ⊹ **${categoryDisplayName}** (${commandCount})`);
+        helpText.push(`${commands}`);
+      }
     } 
     
     helpText.push('\n╰──────────────────────────────╯');
