@@ -4,7 +4,7 @@ import { err, msg } from '../../utils/messages.js';
 
 export default {
   name: 'settings',
-  args: { action: 'string', setting: {type: 'string', required: false}, value: {type: 'string', required: false} },
+  args: { action: 'string', setting: {type: 'string', required: false}, value: {type: 'string', required: false, rest: true} },
   handler: async (client, message, args) => {
     try {
       if (message.Dialog.Type !== 'group') {
@@ -73,17 +73,9 @@ export default {
         return message.reply(msg('✅', `${setting} встановлено на ${boolValue ? 'увімкнено' : 'вимкнено'}`));
       }
 
-      // Встановлення токену
-      if (action === 'token') {
-        if (!setting || !value) {
-          return message.reply(err('Використання: /settings token <dialog_id> <token>'));
-        }
-        
-        await Dialog.updateById(setting, { token: value });
-        return message.reply(msg('✅', 'Токен встановлено'));
-      }
 
-      message.reply(err('Доступні дії: show, set, token'));
+
+      message.reply(err('Доступні дії: show, set'));
     } catch (error) {
       console.error('Settings error:', error);
       message.reply(err('Помилка при роботі з налаштуваннями'));

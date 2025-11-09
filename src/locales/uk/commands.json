@@ -43,6 +43,16 @@
         "description": "Видалити бота з групи",
         "usage": "leave",
         "example": "leave"
+      },
+      "encrypt": {
+        "description": "Зашифрувати текст",
+        "usage": "encrypt [key] [text]",
+        "example": "encrypt ключ секретний текст"
+      },
+      "decrypt": {
+        "description": "Розшифрувати текст",
+        "usage": "decrypt [key] [encrypted]",
+        "example": ["decrypt ключ abc123:def456", "decrypt ключ acc5f5c266a805458e260f54a4554efd:e04fab95d4b9585a4b5a3132e1eafec9d71026b20843c43e130b375dace545b8"]
       }
     }
   },
