@@ -1,4 +1,5 @@
 import { Profile } from '../../models/Profile.js';
+import { LevelUtils } from '../../utils/levels.js';
 
 export default {
   name: 'profile',
@@ -13,11 +14,9 @@ export default {
         return message.reply(`У користувача немає профілю`);
       }
 
-      const level = Profile.getLevel(profile.xp);
-      const nextLevelXP = Profile.getNextLevelXP(profile.xp);
-      const currentLevelXP = level > 1 ? Profile.getXPForLevel(level) : 0;
-      const progressXP = profile.xp - currentLevelXP;
-      const requiredXP = nextLevelXP - currentLevelXP;
+      const level = LevelUtils.getGlobalLevel(profile.xp);
+      const progressXP = LevelUtils.getGlobalProgressXP(profile.xp);
+      const requiredXP = LevelUtils.getGlobalRequiredXP(profile.xp);
       const isPremium = profile.premium.next && new Date(profile.premium.next) > new Date();
       
       const response = [
