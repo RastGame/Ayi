@@ -13,15 +13,18 @@ export default {
         return message.reply(`У користувача немає профілю`);
       }
 
-      const level = Math.floor(profile.xp / 1000);
-      const currentLevelXP = profile.xp % 1000;
+      const level = Profile.getLevel(profile.xp);
+      const nextLevelXP = Profile.getNextLevelXP(profile.xp);
+      const currentLevelXP = level > 1 ? Profile.getXPForLevel(level) : 0;
+      const progressXP = profile.xp - currentLevelXP;
+      const requiredXP = nextLevelXP - currentLevelXP;
       const isPremium = profile.premium.next && new Date(profile.premium.next) > new Date();
       
       const response = [
         `${user.Emoji || '👤'} ${user.Name} ${user.Surname} ( @${user.Link} )`,
         `╭───────────────────────────────╮`,
         `₊ :star2: ⊹ Рівень: ${level}`,
-        `₊ ✨ ⊹ Досвід: ${profile.xp} (${currentLevelXP}/1000)`,
+        `₊ ✨ ⊹ Досвід: ${profile.xp} (${progressXP}/${requiredXP})`,
         `₊ 💰 ⊹ Баланс: ${profile.coins}`,
         `₊ ${isPremium ? '💎' : ':x:'} ⊹ Преміум: ${isPremium ? `до ${new Date(profile.premium.next).toLocaleDateString('uk-UA')}` : 'Немає'}`,
         `₊ 📅 ⊹ Реєстрація: ${new Date(profile.date).toLocaleDateString('uk-UA')}`,

@@ -12,6 +12,9 @@ export default {
       
       // Ігноруємо повідомлення про видалення
       if (message.Type === 'message_delete') return;
+      
+      // Перевірка чи є користувач ботом
+      if (message.Author.Link?.endsWith('_bot')) return;
 
       // логіка на додавання користувача в базу якщо немає (Profiles)
       let profile = await Profile.findById(message.Author.ID);

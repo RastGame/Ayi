@@ -2,6 +2,7 @@ import { RankCardBuilder } from "canvacord";
 import { User } from '../../models/User.js';
 import { Dialog } from '../../models/Dialog.js';
 import { err, msg } from '../../utils/messages.js';
+import { LevelUtils } from '../../utils/levels.js';
 
 export default {
   name: 'rank',
@@ -10,12 +11,9 @@ export default {
     try {
       let targetUser = args.user || message.Author;
 
-      console.log(targetUser)
       if (message.Dialog.Type !== 'group') {
         return message.reply(err('Команда доступна **тільки в групах!**'));
       }
-
-      console.log(targetUser)
 
       const user = await User.findByDialogAndUser(message.Dialog.ID, targetUser.ID);
 
@@ -29,9 +27,9 @@ export default {
         return message.reply(err(`@${targetUser.Link} користувача немає в рейтингу`));
       }
 
-      const level = Math.floor(user.xp / 1000) + 1;
-      const currentXP = user.xp % 1000;
-      const requiredXP = 1000;
+      const level = LevelUtils.getLocalLevel(user.xp);
+      const currentXP = LevelUtils.getLocalProgressXP(user.xp);
+      const requiredXP = LevelUtils.getLocalRequiredXP(user.xp);
       
       const card = new RankCardBuilder()
         .setDisplayName(targetUser.Name + ' ' + targetUser.Surname)
