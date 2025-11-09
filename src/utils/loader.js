@@ -1,6 +1,8 @@
 import { readdirSync } from 'fs';
 import { join, resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { User } from '../models/User.js';
+import { hasPermission } from './permissions.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const cooldowns = new Map();
@@ -53,6 +55,34 @@ export async function loadCommands(client, path = '../commands') {
       return;
     }
     const handler = async (message, args) => {
+      // Перевірка прав
+      if (cmd.permissions && cmd.permissions.length > 0) {
+        if (cmd.groupOnly === true && message.Dialog.Type !== 'group') {
+          return message.reply('❌ Команда доступна тільки в групах!');
+        }
+        
+        const isOwner = message.Author.ID === message.Dialog.Owner?.ID;
+        const isSuperAdmin = message.Author.ID === 1111;
+        
+        // Перевірка на власника (999)
+        if (cmd.permissions.includes(999)) {
+          if (!isOwner && !isSuperAdmin) {
+            return message.reply('❌ Тільки власник групи може використовувати цю команду!');
+          }
+        } else {
+          // Перевірка звичайних прав
+          if (!isOwner && !isSuperAdmin) {
+            const userData = await User.findByDialogAndUser(message.Dialog.ID, message.Author.ID);
+            const userPerms = userData?.permissions || 0;
+            
+            const hasRequiredPerms = cmd.permissions.some(perm => hasPermission(userPerms, perm));
+            if (!hasRequiredPerms) {
+              return message.reply('❌ Недостатньо прав для виконання команди!');
+            }
+          }
+        }
+      }
+      
       // Перевірка та встановлення cooldown
       if (cmd.cooldown) {
         const cooldownTime = checkCooldown(cmd.name, message.Author.ID);

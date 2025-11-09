@@ -5,6 +5,8 @@ import { err, msg } from '../../utils/messages.js';
 export default {
   name: 'perms',
   args: { action: 'string', user: {type: 'user', required: false}, permissions: {type: 'string', required: false, rest: true} },
+  permissions: [PERMS.MANAGE_PERMS],
+  groupOnly: true,
   handler: async (client, message, args) => {
     try {
       if (message.Dialog.Type !== 'group') {

@@ -7,6 +7,7 @@ const ADMIN_ID = 1111;
 export default {
   name: 'settings',
   args: { action: 'string', setting: {type: 'string', required: false}, value: {type: 'string', required: false, rest: true} },
+  groupOnly: true,
   handler: async (client, message, args) => {
     try {
       if (message.Dialog.Type !== 'group') {

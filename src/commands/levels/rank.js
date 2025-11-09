@@ -7,6 +7,7 @@ import { LevelUtils } from '../../utils/levels.js';
 export default {
   name: 'rank',
   args: { user: {type: 'user', required: false} },
+  groupOnly: true,
   handler: async (client, message, args) => {
     try {
       let targetUser = args.user || message.Author;

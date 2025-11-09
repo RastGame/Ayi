@@ -1,4 +1,5 @@
 import { Dialog } from '../../models/Dialog.js';
+import { PERMS } from '../../utils/permissions.js';
 
 function parseTime(timeStr) {
   const match = timeStr.match(/^(\d+)([hmdy])$/);
@@ -20,15 +21,10 @@ export default {
   name: 'kickunactive',
   args: { time: 'string' },
   cooldown: 5000,
+  permissions: [PERMS.KICK],
+  groupOnly: true,
   handler: async (client, message, args) => {
     try {
-      if (message.Dialog.Type !== 'group') {
-        return message.reply('❌ Команда доступна тільки в групах!');
-      }
-
-      if (message.Author.ID !== message.Dialog.Owner?.ID && message.Author.ID !== 1111) {
-        return message.reply('❌ Тільки власник діалогу може використовувати цю команду!');
-      }
 
       const timeMs = parseTime(args.time);
       if (!timeMs) {

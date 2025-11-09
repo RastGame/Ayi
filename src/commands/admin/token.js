@@ -6,6 +6,7 @@ import { encryptToken } from '../../utils/crypto.js';
 export default {
   name: 'token',
   args: { dialog_id: 'int', token: 'string' },
+  permissions: [999],
   handler: async (client, message, args) => {
     try {
       const { dialog_id, token } = args;

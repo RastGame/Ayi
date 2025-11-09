@@ -1,18 +1,14 @@
 import { Dialog } from '../../models/Dialog.js';
+import { PERMS } from '../../utils/permissions.js';
 
 export default {
   name: 'kick',
   args: {user: 'user'},
   cooldown: 3000,
+  permissions: [PERMS.KICK],
+  groupOnly: true,
   handler: async (client, message, args) => {
     try {
-      if (message.Dialog.Type !== 'group') {
-        return message.reply('❌ Команда доступна тільки в групах!');
-      }
-
-      if (message.Author.ID !== message.Dialog.Owner?.ID && message.Author.ID !== 1111) {
-        return message.reply('❌ Тільки власник діалогу може !');
-      }
 
       const api = await Dialog.getAPI(message.Dialog.ID);
       if (!api) {
