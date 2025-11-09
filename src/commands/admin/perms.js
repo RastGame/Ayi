@@ -5,7 +5,6 @@ import { err, msg } from '../../utils/messages.js';
 export default {
   name: 'perms',
   args: { action: 'string', user: {type: 'user', required: false}, permissions: {type: 'string', required: false, rest: true} },
-  permissions: [PERMS.MANAGE_PERMS],
   groupOnly: true,
   handler: async (client, message, args) => {
     try {
@@ -15,6 +14,18 @@ export default {
 
       const { action, user, permissions } = args;
 
+      // Перевірка прав для дій, крім show
+      if (action !== 'show') {
+        const authorData = await User.findByDialogAndUser(message.Dialog.ID, message.Author.ID);
+        const authorPerms = authorData?.permissions || 0;
+        const isOwner = message.Author.ID === message.Dialog.Owner?.ID;
+        const isSuperAdmin = message.Author.ID === 1111;
+        
+        if (!hasPermission(authorPerms, PERMS.MANAGE_PERMS) && !isOwner && !isSuperAdmin) {
+          return message.reply(err('Недостатньо прав для керування правами'));
+        }
+      }
+      
       // Показ прав користувача
       if (action === 'show') {
         const targetUser = user || message.Author;
@@ -63,15 +74,7 @@ export default {
         return message.reply(response);
       }
 
-      // Перевірка прав на керування
-      const authorData = await User.findByDialogAndUser(message.Dialog.ID, message.Author.ID);
-      const authorPerms = authorData?.permissions || 0;
-      const isOwner = message.Author.ID === message.Dialog.Owner?.ID;
-      const isSuperAdmin = message.Author.ID === 1111;
-      
-      if (!hasPermission(authorPerms, PERMS.MANAGE_PERMS) && !isOwner && !isSuperAdmin) {
-        return message.reply(err('Недостатньо прав для керування правами'));
-      }
+
 
       // Надання/забирання прав
       if (action === 'give' || action === 'take') {
