@@ -29,6 +29,9 @@ importers:
       openai:
         specifier: ^6.7.0
         version: 6.7.0(ws@8.18.3)
+      tintshell:
+        specifier: ^0.0.1
+        version: 0.0.1
       yurba.js:
         specifier: 1.0.0-next.12
         version: 1.0.0-next.12
@@ -732,6 +735,9 @@ packages:
   tailwind-merge@3.3.1:
     resolution: {integrity: sha512-gBXpgUm/3rp1lMZZrM/w7D8GKqshif0zAymAhbCyIt8KMe+0v9DQ7cdYLR4FHH/cKpdTXb+A/tKKU3eolfsI+g==}
 
+  tintshell@0.0.1:
+    resolution: {integrity: sha512-OCkwjCaIP2KqUi7X8UxIVhW+RRikNk+vu+ViMfSwrFSZICceZydTsnwF9eO1Rm0tu3+limEJsSsmBMoxme8CEg==}
+
   tiny-inflate@1.0.3:
     resolution: {integrity: sha512-pkY1fj1cKHb2seWDy0B16HeWyczlJA9/WW3u3c4z/NiWDsO3DOU5D7nhTLE9CF0yXv/QZFY7sEJmj24dK+Rrqw==}
 
@@ -1402,6 +1408,8 @@ snapshots:
       has-flag: 3.0.0
 
   tailwind-merge@3.3.1: {}
+
+  tintshell@0.0.1: {}
 
   tiny-inflate@1.0.3: {}
 

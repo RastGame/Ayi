@@ -24,6 +24,7 @@
     "nekos-best.js": "^6.4.0",
     "nekosapi": "^0.7.0",
     "openai": "^6.7.0",
+    "tintshell": "^0.0.1",
     "yurba.js": "1.0.0-next.12"
   },
   "devDependencies": {
