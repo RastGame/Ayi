@@ -1,4 +1,5 @@
 import { MongoClient } from 'mongodb';
+import { logger } from '../utils/logger.js';
 
 let client;
 let db;
@@ -12,7 +13,7 @@ export async function connectDB() {
     client = new MongoClient(mongoUri);
     await client.connect();
     db = client.db('Ayi');
-    console.log('✅ Connected to MongoDB database: Ayi');
+    logger.info('✅ Підключено до MongoDB: Ayi');
   }
   return db;
 }

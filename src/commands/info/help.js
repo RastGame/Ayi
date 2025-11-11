@@ -6,6 +6,7 @@ import { PERMS, PERM_NAMES } from '../../utils/permissions.js';
 
 export default {
   name: 'help',
+  description: 'Показує список команд або допомогу по команді',
   args: { query: { type: 'string', required: false } },
   handler: async (client, message, args) => {
     const rawCommandsData = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'src/locales/uk/commands.json'), 'utf8'));

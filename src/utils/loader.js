@@ -5,6 +5,10 @@ import { User } from '../models/User.js';
 import { hasPermission } from './permissions.js';
 import { msg } from './messages.js';
 import { formatTime } from './timeFormat.js';
+import { logger } from './logger.js';
+import { ErrorHandler } from './errorHandler.js';
+import { config } from '../config/config.js';
+import { checkRateLimit } from './rateLimiter.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const cooldowns = new Map();
@@ -39,7 +43,7 @@ async function loadFiles(dir, handler) {
           const module = await import(`file://${path}`);
           await handler(module.default, path);
         } catch (importError) {
-          console.error(`[✘] Error importing ${path}:`, importError.message);
+          logger.error(`[✘] Error importing ${path}:`, importError.message);
         }
       }
     }
@@ -50,13 +54,30 @@ async function loadFiles(dir, handler) {
 
 export async function loadCommands(client, path = '../commands') {
   const commandsPath = resolve(__dirname, path);
-  console.log(`Loading commands from: ${commandsPath}`);
+  let stats = { success: 0, errors: 0, folders: {} };
+  
   await loadFiles(commandsPath, (cmd, file) => {
+    const relativePath = file.replace(commandsPath, '').replace(/\\/g, '/');
+    const folderName = relativePath.split('/')[1] || 'root';
+    
+    if (!stats.folders[folderName]) {
+      stats.folders[folderName] = { success: 0, errors: 0, commands: [] };
+    }
+    
     if (!cmd?.name || !cmd?.handler) {
-      console.error(`〢 [✘] Invalid command in { ${file} }`);
+      logger.warn(`⚠️ ${relativePath} - missing "name" or "handler" property`);
+      stats.errors++;
+      stats.folders[folderName].errors++;
       return;
     }
     const handler = async (message, args) => {
+      // Перевірка rate limit
+      const rateLimit = checkRateLimit(message.Author.ID);
+      if (!rateLimit.allowed) {
+        const resetInSeconds = Math.ceil(rateLimit.resetIn / 1000);
+        return message.reply(`⏱️ Забагато запитів! Спробуйте через ${resetInSeconds} секунд.`);
+      }
+      
       // Перевірка прав
       if (cmd.permissions && cmd.permissions.length > 0) {
         if (cmd.groupOnly === true && message.Dialog.Type !== 'group') {
@@ -64,7 +85,7 @@ export async function loadCommands(client, path = '../commands') {
         }
         
         const isOwner = message.Author.ID === message.Dialog.Owner?.ID;
-        const isSuperAdmin = message.Author.ID === 1111;
+        const isSuperAdmin = message.Author.ID === config.DEVELOPER_ID;
         
         // Перевірка на власника (999)
         if (cmd.permissions.includes(999)) {
@@ -96,24 +117,113 @@ export async function loadCommands(client, path = '../commands') {
         setCooldown(cmd.name, message.Author.ID, cmd.cooldown);
       }
       
-      // Виконання команди
-      await cmd.handler(client, message, args);
+      // Виконання команди з обробкою помилок
+      try {
+        await cmd.handler(client, message, args);
+      } catch (error) {
+        await ErrorHandler.handleCommandError(error, message, cmd.name);
+      }
     };
     
     client.registerCommand(cmd.name, cmd.args || {}, handler);
-    console.log(`[✅] Command: < ${client.prefix}${cmd.name} >`);
+    
+    const description = cmd.description || 'No description provided';
+    const truncatedDesc = description.length > 50 ? description.substring(0, 47) + '...' : description;
+    
+    stats.success++;
+    stats.folders[folderName].success++;
+    stats.folders[folderName].commands.push({
+      name: cmd.name,
+      description: truncatedDesc,
+      permissions: cmd.permissions || [],
+      cooldown: cmd.cooldown || 0
+    });
   });
+  
+  // Виводимо команди по папкам
+  Object.entries(stats.folders).forEach(([folderName, folderStats]) => {
+    if (folderStats.success === 0 && folderStats.errors === 0) return;
+    
+    const items = [];
+    folderStats.commands.forEach(cmd => {
+      items.push(`${logger.colors.green}✓ ${logger.colors.yellow}${client.prefix}${cmd.name} ${logger.colors.reset}- ${cmd.description}`);
+    });
+    
+    if (folderStats.errors > 0) {
+      items.push(`${logger.colors.yellow}⚠️ ${folderStats.errors} error(s) in this folder${logger.colors.reset}`);
+    }
+    
+    logger.info(`${logger.colors.blue}┌─ 📁 ${logger.colors.cyan}${folderName}${logger.colors.reset}`);
+    items.forEach((item, index) => {
+      const prefix = '│';
+      logger.info(`${logger.colors.blue}${prefix}  ${item}`);
+    });
+    if (items.length > 0) {
+      logger.info(`${logger.colors.blue}└${'─'.repeat(40)}${logger.colors.reset}`);
+    }
+  });
+  
+  return stats;
 }
 
 export async function loadEvents(client, path = '../events') {
   const eventsPath = resolve(__dirname, path);
-  console.log(`Loading events from: ${eventsPath}`);
+  let stats = { success: 0, errors: 0, folders: {} };
+  
   await loadFiles(eventsPath, (event, file) => {
+    const relativePath = file.replace(eventsPath, '').replace(/\\/g, '/');
+    const folderName = relativePath.split('/')[1] || 'root';
+    
+    if (!stats.folders[folderName]) {
+      stats.folders[folderName] = { success: 0, errors: 0, events: [] };
+    }
+    
     if (!event?.name || !event?.handler) {
-      console.error(`〢 [✘] Invalid event in { ${file} }`);
+      logger.warn(`⚠️ ${relativePath} - missing "name" or "handler" property`);
+      stats.errors++;
+      stats.folders[folderName].errors++;
       return;
     }
-    client[event.once ? 'once' : 'on'](event.name, (...args) => event.handler(client, ...args));
-    console.log(`[✅] Event: < ${event.name} >`);
+    
+    client[event.once ? 'once' : 'on'](event.name, async (...args) => {
+      try {
+        await event.handler(client, ...args);
+      } catch (error) {
+        ErrorHandler.handleEventError(error, event.name, ...args);
+      }
+    });
+    
+    const eventType = event.once ? 'once' : 'on';
+    stats.success++;
+    stats.folders[folderName].success++;
+    stats.folders[folderName].events.push({
+      name: event.name,
+      type: eventType
+    });
   });
+  
+  // Виводимо події по папкам
+  Object.entries(stats.folders).forEach(([folderName, folderStats]) => {
+    if (folderStats.success === 0 && folderStats.errors === 0) return;
+    
+    const items = [];
+    folderStats.events.forEach(event => {
+      items.push(`${logger.colors.green}✓ ${logger.colors.cyan}${event.name} ${logger.colors.magenta}[${event.type}]${logger.colors.reset}`);
+    });
+    
+    if (folderStats.errors > 0) {
+      items.push(`${logger.colors.yellow}⚠️ ${folderStats.errors} error(s) in this folder${logger.colors.reset}`);
+    }
+    
+    logger.info(`${logger.colors.blue}┌─ 📁 ${logger.colors.blue}${folderName}${logger.colors.reset}`);
+    items.forEach((item, index) => {
+      const prefix = '│';
+      logger.info(`${logger.colors.blue}${prefix}  ${item}`);
+    });
+    if (items.length > 0) {
+      logger.info(`${logger.colors.blue}└${'─'.repeat(40)}${logger.colors.reset}`);
+    }
+  });
+  
+  return stats;
 }
