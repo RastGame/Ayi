@@ -18,6 +18,10 @@ export class User {
       },
       xp: 0,
       permissions: 0,
+      balance: 0,
+      bank: 0,
+      lastDaily: null,
+      lastWork: null,
       ...data
     };
     return await db.collection('users').insertOne(user);
@@ -83,6 +87,26 @@ export class User {
     return await db.collection('users').deleteMany({
       '_id.id': userId
     });
+  }
+
+  static async addBalance(dialogId, userId, amount) {
+    const db = getDB();
+    return await db.collection('users').updateOne(
+      { 
+        '_id.dialog': dialogId,
+        '_id.id': userId
+      },
+      { $inc: { balance: amount } },
+      { upsert: true }
+    );
+  }
+
+  static async setLastDaily(dialogId, userId, timestamp) {
+    return await this.updateByDialogAndUser(dialogId, userId, { lastDaily: timestamp });
+  }
+
+  static async setLastWork(dialogId, userId, timestamp) {
+    return await this.updateByDialogAndUser(dialogId, userId, { lastWork: timestamp });
   }
 
 }

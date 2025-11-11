@@ -82,6 +82,11 @@ export default {
           return message.reply(err('Використання: /perms give/take [user] [permissions...]'));
         }
 
+        const authorData = await User.findByDialogAndUser(message.Dialog.ID, message.Author.ID);
+        const authorPerms = authorData?.permissions || 0;
+        const isOwner = message.Author.ID === message.Dialog.Owner?.ID;
+        const isSuperAdmin = message.Author.ID === 1111;
+
         let userData = await User.findByDialogAndUser(message.Dialog.ID, user.ID);
         if (!userData) {
           await User.create(message.Dialog.ID, user.ID);

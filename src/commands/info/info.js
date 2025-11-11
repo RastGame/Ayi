@@ -58,7 +58,17 @@ export default {
   name: 'info',
   handler: async (client, message) => {
     const uptime = process.uptime();
-    const commandsCount = client.getCommands?.().length || 0;
+    
+    // Підраховуємо команди так само як в help (виключаємо unix)
+    const fs = await import('fs');
+    const path = await import('path');
+    const rawCommandsData = JSON.parse(fs.default.readFileSync(path.default.join(process.cwd(), 'src/locales/uk/commands.json'), 'utf8'));
+    let commandsCount = 0;
+    Object.entries(rawCommandsData).forEach(([categoryName, category]) => {
+      if (categoryName !== 'unix') {
+        commandsCount += Object.keys(category.commands).length;
+      }
+    });
 
     const db = getDB();
     const usersCount = await db.collection('profiles').countDocuments();

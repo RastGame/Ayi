@@ -3,6 +3,8 @@ import { join, resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { User } from '../models/User.js';
 import { hasPermission } from './permissions.js';
+import { msg } from './messages.js';
+import { formatTime } from './timeFormat.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const cooldowns = new Map();
@@ -87,8 +89,8 @@ export async function loadCommands(client, path = '../commands') {
       if (cmd.cooldown) {
         const cooldownTime = checkCooldown(cmd.name, message.Author.ID);
         if (cooldownTime > 0) {
-          const secondsLeft = Math.ceil(cooldownTime / 1000);
-          return message.reply(`⏰ Зачекайте ${secondsLeft} секунд`);
+          const formattedTime = formatTime(cooldownTime);
+          return message.reply(msg('⏰', `Зачекайте ${formattedTime}`));
         }
         // Встановлюємо cooldown одразу
         setCooldown(cmd.name, message.Author.ID, cmd.cooldown);

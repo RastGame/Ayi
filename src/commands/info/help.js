@@ -55,8 +55,7 @@ export default {
           if (cmd.permissions && Array.isArray(cmd.permissions)) {
             // Перевіряємо чи є 999 (тільки власник)
             if (cmd.permissions.includes(999)) {
-              helpText.push(`**\n⭑ Потрібні права:**`);
-              helpText.push(`٬Власник`);
+              helpText.push(`**\n⭑ Потрібні права:** Власник`);
             } else {
               const permNames = [];
               
@@ -67,10 +66,7 @@ export default {
               }
               
               if (permNames.length > 0) {
-                helpText.push(`**\n⭑ Потрібні права:**`);
-                permNames.forEach(name => {
-                  helpText.push(`༝ ${name}`);
-                });
+                helpText.push(`**\n⭑ Потрібні права:** ${permNames.join(', ')}`);
               }
             }
           }
@@ -143,10 +139,12 @@ export default {
       return message.reply(`❌ Команду або категорію "${args.query}" не знайдено`);
     }
     
-    // Загальний список команд
+    // Загальний список команд (виключаємо unix)
     let commandsCount = 0; 
-    Object.values(commandsData).forEach(category => {
-      commandsCount += Object.keys(category.commands).length;
+    Object.entries(commandsData).forEach(([categoryName, category]) => {
+      if (categoryName !== 'unix') {
+        commandsCount += Object.keys(category.commands).length;
+      }
     });
     
     const helpText = [

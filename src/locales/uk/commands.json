@@ -52,6 +52,16 @@
         "description": "Розшифрувати текст",
         "usage": "decrypt [key] [encrypted]",
         "example": ["decrypt ключ abc123:def456", "decrypt ключ acc5f5c266a805458e260f54a4554efd:e04fab95d4b9585a4b5a3132e1eafec9d71026b20843c43e130b375dace545b8"]
+      },
+      "idea": {
+        "description": "Надіслати ідею розробникам",
+        "usage": "idea [текст]",
+        "example": "idea Додати команду для музики"
+      },
+      "bug": {
+        "description": "Повідомити про баг",
+        "usage": "bug [опис]",
+        "example": "bug Команда help не працює в групах"
       }
     }
   },
@@ -113,7 +123,7 @@
         "usage": "perms [show|give|take] (user) (permissions...)",
         "example": ["perms show @rastgame", "perms give @rastgame MODERATOR", "perms take @rastgame ALL"],
         "permissions": [128],
-        "info": "Можна вказувати кілька прав одразу або ALL для всіх\nПрава: WRITE, DELETE_MSG, EDIT_MSG, EDIT_GROUP, KICK, BAN, MUTE, MANAGE_PERMS, MANAGE_ADMINS, ADMIN\nMODERATOR = DELETE_MSG + KICK + MUTE"
+        "info": "Більше про права {a.prefix}help permissions"
       }
     }
   },
@@ -141,6 +151,29 @@
       }
     }
   },
+  "economy": {
+    "name": "Економіка",
+    "emoji": ":moneybag:",
+    "aliases": ["economy", "eco", "money"],
+    "commands": {
+      "balance": {
+        "description": "Переглянути баланс",
+        "usage": "balance (user)",
+        "example": "balance @rastgame"
+      },
+      "daily": {
+        "description": "Отримати щоденну винагороду",
+        "usage": "daily",
+        "info": "Можна отримати раз на 24 години"
+      },
+      "work": {
+        "description": "Попрацювати і заробити гроші",
+        "usage": "work",
+        "info": "Можна працювати раз на годину"
+      }
+    }
+  },
+
   "unix": {
     "name": "Додатково",
     "emoji": ":sparkles:",
@@ -156,7 +189,7 @@
         "description": "Система прав",
         "header": "Про систему прав та їх числові значення",
         "usage": "permissions",
-        "info": "⊹ Числові значення прав:\n`1` - **WRITE** (писати повідомлення)\n`2` - **DELETE_MSG** (видаляти повідомлення)\n`4` - **EDIT_MSG** (редагувати повідомлення)\n`8` - **EDIT_GROUP** (редагувати групу)\n`16` - **KICK** (вигнати користувача)\n`32` - **BAN** (забанити користувача)\n`64` - **MUTE** (зам'ютити користувача)\n`128` - **MANAGE_PERMS** (керувати правами)\n`256` - **MANAGE_ADMINS** (керувати адмінами)\n`512` - **ADMIN** (адміністратор)\n`999` - **Власник** (спеціальне значення)\n\n⊹ Права можна комбінувати (сумувати числа)\n\n⊹ Спеціальні команди:\n**ALL** - всі права одразу\n**MODERATOR** - згустка прав (DELETE_MSG + KICK + MUTE)"
+        "info": "Числові значення прав:\n`1` - **WRITE** (писати повідомлення)\n`2` - **DELETE_MSG** (видаляти повідомлення)\n`4` - **EDIT_MSG** (редагувати повідомлення)\n`8` - **EDIT_GROUP** (редагувати групу)\n`16` - **KICK** (вигнати користувача)\n`32` - **BAN** (забанити користувача)\n`64` - **MUTE** (зам'ютити користувача)\n`128` - **MANAGE_PERMS** (керувати правами)\n`256` - **MANAGE_ADMINS** (керувати адмінами)\n`512` - **ADMIN** (адміністратор)\n\n`イ` Спеціальні команди:\n`-`**ALL** - всі права одразу\n`-`**MODERATOR** - згустка прав (DELETE_MSG + KICK + MUTE)"
       }
     }
   }
